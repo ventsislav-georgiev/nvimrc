@@ -1,0 +1,5 @@
+{
+  "sumneko-lua.enableNvimLuaDev": true,
+  "inlayHint.enable": false,
+  "go.enable": true
+}
