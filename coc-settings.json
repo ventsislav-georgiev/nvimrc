@@ -1,7 +1,8 @@
 {
-  "sumneko-lua.enableNvimLuaDev": true,
   "inlayHint.enable": false,
+  "suggest.noselect": false,
   "go.enable": true,
+  "Lua.workspace.checkThirdParty": false,
   "languageserver": {
     "terraform": {
       "command": "terraform-ls",

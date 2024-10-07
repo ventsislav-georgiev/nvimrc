@@ -1,4 +1,4 @@
-require('lazy').setup({
+require('lazy').setup {
   require 'plugins.theme',
   require 'plugins.statusline',
   require 'plugins.whichkey',
@@ -26,4 +26,5 @@ require('lazy').setup({
   require 'plugins.search',
   require 'plugins.editorconfig',
   require 'plugins.zoxide',
-})
+  require 'plugins.debug',
+}

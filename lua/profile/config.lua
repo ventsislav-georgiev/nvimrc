@@ -191,6 +191,21 @@ vim.keymap.set('n', '<D-d>', '<cmd>lua require("spectre").open_visual({select_wo
 vim.keymap.set('v', '<D-d>', '<esc><cmd>lua require("spectre").open_visual()<CR>', { desc = 'Search current word' })
 vim.keymap.set('n', '<D-f>', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', { desc = 'Search on current file' })
 
+-- Debugging
+vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })
+vim.keymap.set('n', '<D-\'>', function() require('dap').step_over() end, { desc = 'Step Over' })
+vim.keymap.set('n', '<D-;>', function() require('dap').step_into() end, { desc = 'Step Into' })
+vim.keymap.set('n', '<D-\\>', function() require('dap').step_out() end, { desc = 'Step Out' })
+vim.keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
+vim.keymap.set('n', '<leader>dB', function() require('dap').set_breakpoint() end, { desc = 'Set Breakpoint' })
+vim.keymap.set('n', '<leader>dl', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'Log Point' })
+vim.keymap.set('n', '<leader>dc', function() require('dap').repl.open() end, { desc = 'Open REPL' })
+vim.keymap.set('n', '<leader>dr', function() require('dap').run_last() end, { desc = 'Run Last' })
+vim.keymap.set({'n', 'v'}, '<leader>dh', function() require('dap.ui.widgets').hover() end, { desc = 'Hover' })
+vim.keymap.set({'n', 'v'}, '<leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'Preview' })
+vim.keymap.set('n', '<leader>df', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.frames) end, { desc = 'Frames' })
+vim.keymap.set('n', '<leader>ds', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.scopes) end, { desc = 'Scopes' })
+
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -220,24 +235,20 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.opt.backup = false
 vim.opt.writebackup = false
 
+-- Setup lua nvim
+vim.cmd([[
+  autocmd FileType lua call coc#config('Lua.workspace.library', nvim_get_runtime_file('', 1))
+]])
+
 -- Always show the signcolumn, otherwise it would shift the text each time
 -- diagnostics appeared/became resolved
 vim.opt.signcolumn = 'yes'
 
 local keyset = vim.keymap.set
 -- Autocomplete
-function _G.check_back_space()
-  local col = vim.fn.col '.' - 1
-  return col == 0 or vim.fn.getline('.'):sub(col, col):match '%s' ~= nil
-end
-
 -- Use Tab for trigger completion with characters ahead and navigate
--- NOTE: There's always a completion item selected by default, you may want to enable
--- no select by setting `"suggest.noselect": true` in your configuration file
--- NOTE: Use command ':verbose imap <tab>' to make sure Tab is not mapped by
--- other plugins before putting this into your config
 local opts = { silent = true, noremap = true, expr = true, replace_keycodes = false }
-keyset('i', '<down>', 'coc#pum#visible() ? coc#pum#next(1) : v:lua.check_back_space() ? "<down>" : coc#refresh()', opts)
+keyset('i', '<down>', [[coc#pum#visible() ? coc#pum#next(1) : "\<down>"]], opts)
 keyset('i', '<up>', [[coc#pum#visible() ? coc#pum#prev(1) : "\<up>"]], opts)
 
 -- Make <Tab> to accept selected completion item or notify coc.nvim to format
@@ -372,6 +383,8 @@ local opts = { silent = true, nowait = true }
 keyset('n', '<leader>cd', ':<C-u>CocList diagnostics<cr>', opts)
 -- Manage extensions
 keyset('n', '<leader>ce', ':<C-u>CocList extensions<cr>', opts)
+-- Update extensions
+keyset('n', '<leader>cu', ':<C-u>CocUpdate<cr>', opts)
 -- Show commands
 keyset('n', '<leader>cm', ':<C-u>CocList commands<cr>', opts)
 -- Find symbol of current document
