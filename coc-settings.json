@@ -1,5 +1,14 @@
 {
   "sumneko-lua.enableNvimLuaDev": true,
   "inlayHint.enable": false,
-  "go.enable": true
+  "go.enable": true,
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": ["terraform", "tf"],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  }
 }

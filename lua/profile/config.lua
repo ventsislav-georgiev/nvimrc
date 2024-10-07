@@ -6,7 +6,7 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-vim.o.guifont = 'MesloLGS NF'
+vim.o.guifont = 'MesloLGS Nerd Font'
 vim.g.undolevels = 1000
 
 -- Netrw
