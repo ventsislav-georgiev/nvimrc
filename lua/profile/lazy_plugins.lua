@@ -2,7 +2,6 @@ require('lazy').setup {
   require 'plugins.cursor',
   -- require 'plugins.debug',
   require 'plugins.editorconfig',
-  -- require 'plugins.mini',
 
   require 'plugins.explorer',
   require 'plugins.explorer_batchedit',
@@ -12,7 +11,6 @@ require('lazy').setup {
   require 'plugins.lsp_autoformat',
   require 'plugins.lsp_autopairs',
   require 'plugins.lsp_comment',
-  -- require 'plugins.lsp_indentguide',
   require 'plugins.lsp_lint',
   require 'plugins.lsp_refactor',
   require 'plugins.lsp_syntax',
