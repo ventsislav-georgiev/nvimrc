@@ -113,10 +113,11 @@ vim.keymap.set('n', 'X', '"_X')
 vim.keymap.set('t', '<C-Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Git Diff View Shortcuts
-vim.keymap.set('n', '<leader>df', ':DiffviewFileHistory %<CR>', { desc = '[F]ile History' })
-vim.keymap.set('n', '<leader>db', ':DiffviewFileHistory<CR>', { desc = '[B]ranch History' })
-vim.keymap.set('n', '<leader>dd', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
-vim.keymap.set('n', '<leader>dc', ':DiffviewClose<CR>', { desc = '[C]lose Diff View' })
+vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory %<CR>', { desc = '[F]ile History' })
+vim.keymap.set('n', '<leader>gb', ':DiffviewFileHistory<CR>', { desc = '[B]ranch History' })
+vim.keymap.set('n', '<leader>gc', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
+vim.keymap.set('n', '<D-S>', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
+vim.keymap.set('n', '<leader>gq', ':DiffviewClose<CR>', { desc = '[C]lose Diff View' })
 
 if vim.g.neovide then
   -- Allow clipboard copy paste in neovim
@@ -192,19 +193,19 @@ vim.keymap.set('v', '<D-d>', '<esc><cmd>lua require("spectre").open_visual()<CR>
 vim.keymap.set('n', '<D-f>', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', { desc = 'Search on current file' })
 
 -- Debugging
-vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })
-vim.keymap.set('n', '<D-\'>', function() require('dap').step_over() end, { desc = 'Step Over' })
-vim.keymap.set('n', '<D-;>', function() require('dap').step_into() end, { desc = 'Step Into' })
-vim.keymap.set('n', '<D-\\>', function() require('dap').step_out() end, { desc = 'Step Out' })
-vim.keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
-vim.keymap.set('n', '<leader>dB', function() require('dap').set_breakpoint() end, { desc = 'Set Breakpoint' })
-vim.keymap.set('n', '<leader>dl', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'Log Point' })
-vim.keymap.set('n', '<leader>dc', function() require('dap').repl.open() end, { desc = 'Open REPL' })
-vim.keymap.set('n', '<leader>dr', function() require('dap').run_last() end, { desc = 'Run Last' })
-vim.keymap.set({'n', 'v'}, '<leader>dh', function() require('dap.ui.widgets').hover() end, { desc = 'Hover' })
-vim.keymap.set({'n', 'v'}, '<leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'Preview' })
-vim.keymap.set('n', '<leader>df', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.frames) end, { desc = 'Frames' })
-vim.keymap.set('n', '<leader>ds', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.scopes) end, { desc = 'Scopes' })
+-- vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })
+-- vim.keymap.set('n', '<D-\'>', function() require('dap').step_over() end, { desc = 'Step Over' })
+-- vim.keymap.set('n', '<D-;>', function() require('dap').step_into() end, { desc = 'Step Into' })
+-- vim.keymap.set('n', '<D-\\>', function() require('dap').step_out() end, { desc = 'Step Out' })
+-- vim.keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
+-- vim.keymap.set('n', '<leader>dB', function() require('dap').set_breakpoint() end, { desc = 'Set Breakpoint' })
+-- vim.keymap.set('n', '<leader>dl', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'Log Point' })
+-- vim.keymap.set('n', '<leader>dc', function() require('dap').repl.open() end, { desc = 'Open REPL' })
+-- vim.keymap.set('n', '<leader>dr', function() require('dap').run_last() end, { desc = 'Run Last' })
+-- vim.keymap.set({'n', 'v'}, '<leader>dh', function() require('dap.ui.widgets').hover() end, { desc = 'Hover' })
+-- vim.keymap.set({'n', 'v'}, '<leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'Preview' })
+-- vim.keymap.set('n', '<leader>df', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.frames) end, { desc = 'Frames' })
+-- vim.keymap.set('n', '<leader>ds', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.scopes) end, { desc = 'Scopes' })
 
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`

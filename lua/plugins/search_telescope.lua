@@ -80,13 +80,19 @@ return {
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 
-      vim.keymap.set('n', '<leader>ss', function()
+      local files_search = function()
         builtin.find_files {
           find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--glob', '!.git' },
           hidden = true,
           file_ignore_patterns = file_ignore_patterns,
         }
-      end, { desc = '[S]earch Files' })
+      end
+
+      vim.keymap.set('n', '<leader>ss', files_search, { desc = '[S]earch Files' })
+
+      if vim.g.neovide then
+        vim.keymap.set('n', '<D-p>', files_search, { desc = '[S]earch Files' })
+      end
 
       vim.keymap.set('n', '<leader>sw', function()
         builtin.grep_string {
