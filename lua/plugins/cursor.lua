@@ -10,17 +10,17 @@ return {
     -- vim.g.VM_highlight_matches = ''
 
     vim.g.VM_maps = {
-      ['Undo'] = 'u',
-      ['Redo'] = '<C-r>',
-      ['Find Under'] = '<C-d>',
-      ['Skip Region'] = '<C-s>',
+      ['Undo'] = '<D-z>',
+      ['Redo'] = '<D-Z>',
+      ['Find Under'] = '<D-d>',
+      ['Skip Region'] = '<D-s>',
       ['Select h'] = '<S-Left>',
       ['Select l'] = '<S-Right>',
-      ['Add Cursor Up'] = '<C-Up>',
-      ['Find Subword Under'] = '<C-d>',
-      ['Add Cursor Down'] = '<C-Down>',
-      ['Mouse Cursor'] = '<C-LeftMouse>',
-      ['Mouse Column'] = '<C-RightMouse>',
+      ['Add Cursor Up'] = '<D-Up>',
+      ['Find Subword Under'] = '<D-d>',
+      ['Add Cursor Down'] = '<D-Down>',
+      ['Mouse Cursor'] = '<D-LeftMouse>',
+      ['Mouse Column'] = '<D-RightMouse>',
     }
 
     vim.g.VM_custom_remaps = {

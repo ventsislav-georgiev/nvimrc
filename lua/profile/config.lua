@@ -187,10 +187,9 @@ vim.keymap.set('n', '<D-->', function()
 end)
 
 -- Spectre
-vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle()<CR>', { desc = 'Toggle Spectre' })
-vim.keymap.set('n', '<D-d>', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', { desc = 'Search current word' })
-vim.keymap.set('v', '<D-d>', '<esc><cmd>lua require("spectre").open_visual()<CR>', { desc = 'Search current word' })
-vim.keymap.set('n', '<D-f>', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', { desc = 'Search on current file' })
+vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
+vim.keymap.set('n', '<D-f>', '<cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Search on current file' })
+vim.keymap.set('v', '<D-f>', '<esc><cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Search on current file' })
 
 -- Debugging
 -- vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })

@@ -7,7 +7,6 @@ return {
     local api = vim.api
     local config = require 'spectre.config'
     local state = require 'spectre.state'
-    local state_utils = require 'spectre.state_utils'
     local utils = require 'spectre.utils'
     local ui = require 'spectre.ui'
     local async = require 'plenary.async'
@@ -61,6 +60,16 @@ return {
       ui.render_file(state.total_item[t.c_line], true)
     end
     require('spectre.actions').select_entry = select_entry
+
+    local function clear_file_highlight()
+      local all_bufs = vim.api.nvim_list_bufs()
+      for _, buf_id in ipairs(all_bufs) do
+          if buf_id ~= state.bufnr and vim.api.nvim_buf_is_loaded(buf_id) then
+            vim.api.nvim_buf_clear_namespace(buf_id, config.namespace, 0, -1)
+          end
+        end
+    end
+    require('spectre.actions').clear_file_highlight = clear_file_highlight
 
     local render_line = function(bufnr, namespace, text_opts, view_opts, regex)
       local cfg = state.user_config
@@ -123,9 +132,6 @@ return {
     -- if highlight_current, spectre and file all need to be re-rendered, else only autocmd needs to render new loaded file
     local render_file = function(current_item, if_highlight_current)
       if not current_item.is_disable then
-        local state = require 'spectre.state'
-        local config = state.user_config
-        local padding_text = state.user_config.result_padding
         local padding = #state.user_config.result_padding
         local item_line_len = 0
         if config.lnum_for_results == true then
@@ -246,16 +252,6 @@ return {
     require('spectre.ui').render_line = render_line
     require('spectre.ui').render_file = render_file
 
-    local function clear_file_highlight()
-      local all_bufs = vim.api.nvim_list_bufs()
-      local state = require 'spectre.state'
-      for _, buf_id in ipairs(all_bufs) do
-        if buf_id ~= state.bufnr and vim.api.nvim_buf_is_loaded(buf_id) then
-          vim.api.nvim_buf_clear_namespace(buf_id, config.namespace, 0, -1)
-        end
-      end
-    end
-
     local function hl_match(opts)
       if #opts.search_query > 0 then
         api.nvim_buf_add_highlight(state.bufnr, config.namespace, state.user_config.highlight.search, 2, 0, -1)
@@ -264,6 +260,7 @@ return {
         api.nvim_buf_add_highlight(state.bufnr, config.namespace, state.user_config.highlight.replace, 4, 0, -1)
       end
     end
+
     local do_replace_text = function(opts, async_id)
       state.query = opts or state.query
       hl_match(state.query)
