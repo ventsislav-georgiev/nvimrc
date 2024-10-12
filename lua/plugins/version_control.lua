@@ -96,8 +96,8 @@ return {
         view = {
           -- The `view` bindings are active in the diff buffers, only when the current
           -- tabpage is a Diffview.
-          { 'n', '<down>', actions.select_next_entry, { desc = 'Open the diff for the next file' } },
-          { 'n', '<up>', actions.select_prev_entry, { desc = 'Open the diff for the previous file' } },
+          { 'n', '<Tab>', actions.select_next_entry, { desc = 'Open the diff for the next file' } },
+          { 'n', '<S-Tab>', actions.select_prev_entry, { desc = 'Open the diff for the previous file' } },
           { 'n', '[F', actions.select_first_entry, { desc = 'Open the diff for the first file' } },
           { 'n', ']F', actions.select_last_entry, { desc = 'Open the diff for the last file' } },
           { 'n', 'gf', actions.goto_file_edit, { desc = 'Open the file in the previous tabpage' } },
