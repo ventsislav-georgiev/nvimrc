@@ -188,8 +188,18 @@ end)
 
 -- Spectre
 vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
-vim.keymap.set('n', '<D-f>', '<cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Search on current file' })
-vim.keymap.set('v', '<D-f>', '<esc><cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Search on current file' })
+vim.keymap.set(
+  'n',
+  '<D-f>',
+  '<cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>',
+  { desc = 'Search on current file' }
+)
+vim.keymap.set(
+  'v',
+  '<D-f>',
+  '<esc><cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>',
+  { desc = 'Search on current file' }
+)
 
 -- Debugging
 -- vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })
@@ -208,21 +218,44 @@ vim.keymap.set('v', '<D-f>', '<esc><cmd>lua require("spectre").open_file_search(
 
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`
+local autocmd_group = vim.api.nvim_create_augroup('AutoCmdGroup', {})
+
+-- Refresh treesitter highlights after a session is loaded
+local skip_reload = false
+vim.api.nvim_create_autocmd({ 'User' }, {
+  pattern = 'SessionLoadPost',
+  group = autocmd_group,
+  callback = function()
+    if skip_reload then
+      skip_reload = false
+      return
+    end
+
+    skip_reload = true
+    vim.defer_fn(function()
+      vim.cmd 'SessionManager load_current_dir_session'
+    end, 100)
+  end,
+})
 
 -- Auto-save on changes
-vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, { command = 'silent! update' })
+vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
+  group = autocmd_group,
+  command = 'silent! update',
+})
 
 -- Highlight when yanking (copying) text
---  See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
+  group = autocmd_group,
   desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
+    --  See `:help vim.highlight.on_yank()`
     vim.highlight.on_yank()
   end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {
+  group = autocmd_group,
   desc = 'Disable New Line Comment',
   pattern = '*',
   callback = function()
@@ -236,9 +269,9 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 
 -- Setup lua nvim
-vim.cmd([[
+vim.cmd [[
   autocmd FileType lua call coc#config('Lua.workspace.library', nvim_get_runtime_file('', 1))
-]])
+]]
 
 -- Always show the signcolumn, otherwise it would shift the text each time
 -- diagnostics appeared/became resolved
