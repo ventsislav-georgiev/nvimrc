@@ -125,7 +125,7 @@ return {
       end, { desc = '[/] Fuzzily search in current buffer' })
 
       vim.keymap.set('n', '<leader>z', require('telescope').extensions.zoxide.list, { desc = '[C]hange [D]irectory' })
-      -- vim.keymap.set('n', '<leader>u', '<cmd>Telescope undo<cr>')
+      vim.keymap.set('n', '<leader>u', '<cmd>Telescope undo<cr>')
 
       -- Diff view
       vim.keymap.set('n', '<leader>sv', ':DiffviewOpen<CR>', { desc = '[S]how Diff[V]iew' })

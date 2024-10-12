@@ -3,7 +3,7 @@ return {
   dependencies = 'nvim-lua/plenary.nvim',
   config = true,
   keys = {
-    { '<leader>u', "<cmd>lua require('undotree').toggle()<cr>" },
+    { '<leader>tu', "<cmd>lua require('undotree').toggle()<cr>", desc = "Undotree" },
   },
   opts = {
     float_diff = true, -- using float window previews diff, set this `true` will disable layout option
