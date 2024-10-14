@@ -15,6 +15,8 @@ require('lazy').setup {
   require 'plugins.lsp_refactor',
   require 'plugins.lsp_syntax',
 
+  require 'plugins.mini',
+
   require 'plugins.search_global',
   require 'plugins.search_jump',
   require 'plugins.search_telescope',
