@@ -117,7 +117,6 @@ vim.keymap.set('n', '<D-S>', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
 vim.keymap.set('n', '<leader>gq', ':DiffviewClose<CR>', { desc = '[C]lose Diff View' })
 
 if vim.g.neovide then
-  -- Allow clipboard copy paste in neovim
   vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
   vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
   vim.keymap.set({ 'n', 'v' }, '<D-z>', 'u') -- Undo
@@ -130,6 +129,10 @@ if vim.g.neovide then
   vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
   vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
   vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+  vim.keymap.set('n', '<backspace>', '"_X') -- Delete char
+  vim.keymap.set('n', '<del>', '"_x') -- Delete char
+  vim.keymap.set('v', '<backspace>', '"_d') -- Delete selection
+  vim.keymap.set('v', '<del>', '"_d') -- Delete selection
 
   vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
