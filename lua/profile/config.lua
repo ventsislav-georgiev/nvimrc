@@ -145,12 +145,14 @@ if vim.g.neovide then
   vim.keymap.set({ 'n', 'v' }, '<D-right>', '$')
   vim.keymap.set('i', '<D-left>', '<C-O>0')
   vim.keymap.set('i', '<D-right>', '<C-O>$')
-  vim.keymap.set('n', '<D-up>', 'gg')
-  vim.keymap.set('n', '<D-down>', 'G')
+  vim.keymap.set('n', '<C-up>', 'gg')
+  vim.keymap.set('n', '<C-down>', 'G')
   vim.keymap.set('n', '<C-->', '<C-O>')
   vim.keymap.set('n', '<C-=>', '<C-I>')
 
+  -- Commenting
   vim.keymap.set('n', '<D-/>', ':norm gcc<CR>')
+  vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
 
   -- Configs
   vim.keymap.set('n', '<D-0>', ':source<CR>')
@@ -175,6 +177,15 @@ if vim.g.neovide then
   vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
   vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
   vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
+
+  -- Toggle resize terminal
+  local size = 20
+  local expanded_size = 60
+  vim.keymap.set('t', '<C-~>', function()
+    local term = require('toggleterm.terminal').get_or_create_term(1)
+    size = size == expanded_size and 20 or expanded_size
+    term:resize(size)
+  end, { silent = true })
 end
 
 -- Allow +- scaling
