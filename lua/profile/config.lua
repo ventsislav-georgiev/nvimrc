@@ -97,8 +97,8 @@ vim.keymap.set('n', '<C-left>', '<C-w><C-h>', { desc = 'Move focus to the left w
 vim.keymap.set('n', '<C-right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-down>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-up>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('n', 'q', '<Nop>')
-vim.keymap.set('n', 'Q', '<Nop>')
+vim.keymap.set('n', 'q', '<nop>')
+vim.keymap.set('n', 'Q', '<nop>')
 vim.keymap.set('n', 'QQ', ':q<CR>', { desc = 'Quit' })
 
 -- Disable delete command copying to register
@@ -108,9 +108,6 @@ vim.keymap.set({ 'n', 'v' }, 'c', '"_c')
 vim.keymap.set({ 'n', 'v' }, 'C', '"_C')
 vim.keymap.set('n', 'x', '"_x')
 vim.keymap.set('n', 'X', '"_X')
-
--- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
-vim.keymap.set('t', '<C-Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Git Diff View Shortcuts
 vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory %<CR>', { desc = '[F]ile History' })
@@ -136,8 +133,6 @@ if vim.g.neovide then
 
   vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
-  vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true })
-  vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true })
 
   -- Option arrow keys to move lines and navigation
   vim.keymap.set('n', '<M-up>', ':m -2<CR>')
@@ -166,9 +161,20 @@ if vim.g.neovide then
   vim.keymap.set('n', '<D-R>', ':SessionManager load_current_dir_session<CR>')
 
   -- Terminal
-  vim.keymap.set('t', '<D-k>', 'clear<CR>')
-  vim.keymap.set('t', '<M-left>', '<S-left>')
-  vim.keymap.set('t', '<M-right>', '<S-right>')
+  vim.keymap.set('t', 'QQ', '<C-\\><C-n>:q<cr>', { silent = true }) -- Close terminal
+  vim.keymap.set('t', '<D-x>', '<C-\\><C-n>', { silent = true }) -- Exit terminal mode
+  vim.keymap.set('t', '<D-k>', '<C-l>', { silent = true }) -- Clear terminal
+  vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+Pi') -- Paste terminal mode
+  vim.keymap.set('n', '<D-l>', '<C-\\><C-n><C-w>j', { silent = true }) -- Move to terminal
+  vim.keymap.set('t', '<D-l>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
+  vim.keymap.set('t', '<C-up>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
+  vim.keymap.set('t', '<M-left>', '<esc>b', { silent = true }) -- Jump back a word
+  vim.keymap.set('t', '<M-right>', '<esc>f', { silent = true }) -- Jump forward a word
+  vim.keymap.set('t', '<D-left>', '<C-a><C-a>', { silent = true }) -- Jump to beginning of line
+  vim.keymap.set('t', '<D-right>', '<C-e>', { silent = true }) -- Jump to end of line
+  vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
+  vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
+  vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
 end
 
 -- Allow +- scaling
@@ -260,6 +266,26 @@ vim.api.nvim_create_autocmd('FileType', {
   pattern = '*',
   callback = function()
     vim.opt_local.formatoptions:remove { 'r', 'o' }
+  end,
+})
+
+-- [[ Terminal ]]
+-- Ensure terminal is in insert mode when re-entered
+vim.api.nvim_create_autocmd('BufEnter', {
+  pattern = '*toggleterm#*',
+  callback = function()
+    vim.defer_fn(function()
+      vim.cmd 'startinsert'
+    end, 100)
+  end,
+})
+
+-- Set keybindings for terminal
+vim.api.nvim_create_autocmd('FileType', {
+  group = autocmd_group,
+  pattern = '*toggleterm*',
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', '<D-x>', '<cmd>startinsert<CR>', { noremap = true, silent = true })
   end,
 })
 

@@ -9,6 +9,7 @@ return {
   cmd = 'Neotree',
   keys = {
     { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<D-E>', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
     window = {
@@ -30,6 +31,7 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['<D-E>'] = 'close_window',
         },
       },
     },
