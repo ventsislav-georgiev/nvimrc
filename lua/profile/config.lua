@@ -145,8 +145,8 @@ if vim.g.neovide then
   vim.keymap.set({ 'n', 'v' }, '<D-right>', '$')
   vim.keymap.set('i', '<D-left>', '<C-O>0')
   vim.keymap.set('i', '<D-right>', '<C-O>$')
-  vim.keymap.set('n', '<C-up>', 'gg')
-  vim.keymap.set('n', '<C-down>', 'G')
+  vim.keymap.set('n', '<home>', 'gg')
+  vim.keymap.set('n', '<end>', 'G')
   vim.keymap.set('n', '<C-->', '<C-O>')
   vim.keymap.set('n', '<C-=>', '<C-I>')
 
@@ -177,6 +177,9 @@ if vim.g.neovide then
   vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
   vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
   vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
+  vim.keymap.set('t', '<D-S>', '<C-\\><C-n><C-w>k<cmd>DiffviewOpen<CR>', { silent = true }) -- Open diff view
+  vim.keymap.set('t', '<D-E>', '<C-\\><C-n><C-w>k<cmd>Neotree reveal<CR>', { silent = true }) -- Open file tree
+  vim.keymap.set('t', '<C-r>', '<cmd>SessionManager load_session<CR>', { silent = true }) -- Load session
 
   -- Toggle resize terminal
   local size = 20

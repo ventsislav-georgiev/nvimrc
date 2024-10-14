@@ -26,14 +26,15 @@ return {
 
       -- Override highlight groups (see ./lua/vscode/theme.lua)
       group_overrides = {
-        -- this supports the same val table as vim.api.nvim_set_hl
-        -- use colors from this colorscheme by requiring vscode.colors!
         Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
+        DiffAdd = { fg = 'None', bg = c.vscDiffGreenDark },
+        DiffChange = { fg = 'None', bg = c.vscDiffGreenLight },
+        DiffDelete = { fg = 'None', bg = c.vscDiffRedDark },
+        DiffText = { fg = 'None', bg = c.vscDiffRedDark },
       },
     }
   end,
   init = function()
-    -- Load the colorscheme here.
     vim.cmd.colorscheme 'vscode'
 
     -- You can configure highlights by doing something like:
