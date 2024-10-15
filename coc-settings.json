@@ -3,6 +3,7 @@
   "suggest.noselect": false,
   "go.enable": true,
   "Lua.workspace.checkThirdParty": false,
+  "python.linting.flake8Enabled": true,
   "languageserver": {
     "terraform": {
       "command": "terraform-ls",

@@ -1,6 +1,6 @@
 require('lazy').setup {
   require 'plugins.cursor',
-  -- require 'plugins.debug',
+  require 'plugins.debug',
   require 'plugins.editorconfig',
 
   require 'plugins.explorer',

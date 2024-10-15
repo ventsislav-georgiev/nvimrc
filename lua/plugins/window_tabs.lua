@@ -28,9 +28,9 @@ return {
       max_prefix_length = 10,
       tab_size = 25,
       truncate_names = false,
-      -- diagnostics = 'coc',
+      diagnostics = 'coc',
       hover = { enable = false },
-      -- enforce_regular_tabs = true,
+      enforce_regular_tabs = true,
       auto_toggle_bufferline = true,
     },
     highlights = {

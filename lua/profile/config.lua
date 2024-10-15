@@ -6,7 +6,7 @@ vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = true
-vim.o.guifont = 'MesloLGS Nerd Font'
+vim.o.guifont = 'MesloLGS Nerd Font:h12'
 vim.g.undolevels = 1000
 
 -- Netrw
@@ -23,6 +23,21 @@ if vim.g.neovide then
   -- Allow usage of option key
   vim.g.neovide_input_macos_option_key_is_meta = 'both'
   vim.g.neovide_hide_mouse_when_typing = true
+
+  -- Allow +- scaling
+  vim.g.neovide_scale_factor = 1.0
+
+  local change_scale_factor = function(delta)
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + delta
+  end
+
+  vim.keymap.set('n', '<D-=>', function()
+    change_scale_factor(0.10)
+  end)
+
+  vim.keymap.set('n', '<D-->', function()
+    change_scale_factor(-0.10)
+  end)
 end
 
 -- [[ Setting options ]]
@@ -30,7 +45,7 @@ end
 
 -- Make line numbers default
 vim.opt.number = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -85,14 +100,18 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Set completeopt to have a better completion experience
+-- vim.o.completeopt = 'menuone,noselect'
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
--- vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>cq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
---  See `:help wincmd` for a list of all window commands
+-- Windows
+-- See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-right>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-down>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
@@ -100,6 +119,9 @@ vim.keymap.set('n', '<C-up>', '<C-w><C-k>', { desc = 'Move focus to the upper wi
 vim.keymap.set('n', 'q', '<nop>')
 vim.keymap.set('n', 'Q', '<nop>')
 vim.keymap.set('n', 'QQ', ':q<CR>', { desc = 'Quit' })
+
+-- Help
+vim.keymap.set('n', '<D-F1>', ':NoiceAll<CR>', { desc = 'Open [N]oice' })
 
 -- Disable delete command copying to register
 vim.keymap.set({ 'n', 'v' }, 'd', '"_d')
@@ -116,98 +138,93 @@ vim.keymap.set('n', '<leader>gc', ':DiffviewOpen<CR>', { desc = 'Current [D]iff'
 vim.keymap.set('n', '<D-S>', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
 vim.keymap.set('n', '<leader>gq', ':DiffviewClose<CR>', { desc = '[C]lose Diff View' })
 
-if vim.g.neovide then
-  vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
-  vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
-  vim.keymap.set({ 'n', 'v' }, '<D-z>', 'u') -- Undo
-  vim.keymap.set({ 'n', 'v' }, '<D-Z>', '<C-r>') -- Redo
-  vim.keymap.set('i', '<D-z>', '<ESC>uu') -- Undo
-  vim.keymap.set('i', '<D-Z>', '<ESC><C-r>') -- Redo
-  vim.keymap.set('n', '<D-c>', 'Vy') -- Copy
-  vim.keymap.set('v', '<D-c>', '"+y') -- Copy
-  vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
-  vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
-  vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
-  vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
-  vim.keymap.set('n', '<backspace>', '"_X') -- Delete char
-  vim.keymap.set('n', '<del>', '"_x') -- Delete char
-  vim.keymap.set('v', '<backspace>', '"_d') -- Delete selection
-  vim.keymap.set('v', '<del>', '"_d') -- Delete selection
+-- General Operations
+vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
+vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+vim.keymap.set({ 'n', 'v' }, '<D-z>', 'u') -- Undo
+vim.keymap.set({ 'n', 'v' }, '<D-Z>', '<C-r>') -- Redo
+vim.keymap.set('i', '<D-z>', '<ESC>uu') -- Undo
+vim.keymap.set('i', '<D-Z>', '<ESC><C-r>') -- Redo
+vim.keymap.set('n', '<D-c>', 'Vy') -- Copy
+vim.keymap.set('v', '<D-c>', '"+y') -- Copy
+vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
+vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
+vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
+vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
+vim.keymap.set('n', '<backspace>', '"_X') -- Delete char
+vim.keymap.set('n', '<del>', '"_x') -- Delete char
+vim.keymap.set('v', '<backspace>', '"_d') -- Delete selection
+vim.keymap.set('v', '<del>', '"_d') -- Delete selection
+vim.keymap.set('n', '<D-P>', '<C-^>') -- Switch between last two buffers
+vim.keymap.set('n', '<D-w>', ':bd<CR>') -- Close buffer
 
-  vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
-  vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
 
-  -- Option arrow keys to move lines and navigation
-  vim.keymap.set('n', '<M-up>', ':m -2<CR>')
-  vim.keymap.set('n', '<M-down>', ':m +1<CR>')
-  vim.keymap.set({ 'n', 'v' }, '<M-left>', 'b')
-  vim.keymap.set({ 'n', 'v' }, '<M-right>', 'w')
-  vim.keymap.set('i', '<M-left>', '<C-O>b')
-  vim.keymap.set('i', '<M-right>', '<C-O>w')
-  vim.keymap.set({ 'n', 'v' }, '<D-left>', '0')
-  vim.keymap.set({ 'n', 'v' }, '<D-right>', '$')
-  vim.keymap.set('i', '<D-left>', '<C-O>0')
-  vim.keymap.set('i', '<D-right>', '<C-O>$')
-  vim.keymap.set('n', '<home>', 'gg')
-  vim.keymap.set('n', '<end>', 'G')
-  vim.keymap.set('n', '<C-->', '<C-O>')
-  vim.keymap.set('n', '<C-=>', '<C-I>')
+-- Option arrow keys to move lines and navigation
+-- = to reindent, . current line number, '< begging of selection, '> end of selection, gv reselect last selection
+vim.keymap.set('n', '<M-up>', ':m .-2<CR>==')
+vim.keymap.set('n', '<M-down>', ':m .+1<CR>==')
+vim.keymap.set('v', '<M-up>', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', '<M-down>', ":m '>+1<CR>gv=gv")
+vim.keymap.set('i', '<M-up>', '<Esc>:m .-2<CR>==gi')
+vim.keymap.set('i', '<M-down>', '<Esc>:m .+1<CR>==gi')
+vim.keymap.set({ 'n', 'v' }, '<M-left>', 'b')
+vim.keymap.set({ 'n', 'v' }, '<M-right>', 'w')
+vim.keymap.set('i', '<M-left>', '<C-O>b')
+vim.keymap.set('i', '<M-right>', '<C-O>w')
+vim.keymap.set({ 'n', 'v' }, '<D-left>', '0')
+vim.keymap.set({ 'n', 'v' }, '<D-right>', '$')
+vim.keymap.set('i', '<D-left>', '<C-O>0')
+vim.keymap.set('i', '<D-right>', '<C-O>$')
+vim.keymap.set({ 'n', 'v' }, '<D-up>', 'gg')
+vim.keymap.set({ 'n', 'v' }, '<D-down>', 'G')
+vim.keymap.set('n', '<home>', 'gg')
+vim.keymap.set('n', '<end>', 'G')
+vim.keymap.set('n', '<C-->', '<C-O>')
+vim.keymap.set('n', '<C-=>', '<C-I>')
+vim.keymap.set({ 'n', 'v' }, '<S-up>', '10k')
+vim.keymap.set({ 'n', 'v' }, '<S-down>', '10j')
 
-  -- Commenting
-  vim.keymap.set('n', '<D-/>', ':norm gcc<CR>')
-  vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
+-- Commenting
+vim.keymap.set('n', '<D-/>', ':norm gcc<CR>')
+vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
 
-  -- Configs
-  vim.keymap.set('n', '<D-0>', ':source<CR>')
-  vim.keymap.set('n', '<C-0>', ':Lazy<CR>')
+-- Configs
+vim.keymap.set('n', '<D-0>', ':source<CR>')
+vim.keymap.set('n', '<C-0>', ':Lazy<CR>')
 
-  -- Navigate Sessions
-  vim.keymap.set('n', '<C-r>', ':SessionManager load_session<CR>')
-  vim.keymap.set('n', '<D-R>', ':SessionManager load_current_dir_session<CR>')
+-- Navigate Sessions
+vim.keymap.set('n', '<C-r>', ':SessionManager load_session<CR>')
+vim.keymap.set('n', '<D-R>', ':SessionManager load_current_dir_session<CR>')
 
-  -- Terminal
-  vim.keymap.set('t', 'QQ', '<C-\\><C-n>:q<cr>', { silent = true }) -- Close terminal
-  vim.keymap.set('t', '<D-x>', '<C-\\><C-n>', { silent = true }) -- Exit terminal mode
-  vim.keymap.set('t', '<D-k>', '<C-l>', { silent = true }) -- Clear terminal
-  vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+Pi') -- Paste terminal mode
-  vim.keymap.set('n', '<D-l>', '<C-\\><C-n><C-w>j', { silent = true }) -- Move to terminal
-  vim.keymap.set('t', '<D-l>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
-  vim.keymap.set('t', '<C-up>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
-  vim.keymap.set('t', '<M-left>', '<esc>b', { silent = true }) -- Jump back a word
-  vim.keymap.set('t', '<M-right>', '<esc>f', { silent = true }) -- Jump forward a word
-  vim.keymap.set('t', '<D-left>', '<C-a><C-a>', { silent = true }) -- Jump to beginning of line
-  vim.keymap.set('t', '<D-right>', '<C-e>', { silent = true }) -- Jump to end of line
-  vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
-  vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
-  vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
-  vim.keymap.set('t', '<D-S>', '<C-\\><C-n><C-w>k<cmd>DiffviewOpen<CR>', { silent = true }) -- Open diff view
-  vim.keymap.set('t', '<D-E>', '<C-\\><C-n><C-w>k<cmd>Neotree reveal<CR>', { silent = true }) -- Open file tree
-  vim.keymap.set('t', '<C-r>', '<cmd>SessionManager load_session<CR>', { silent = true }) -- Load session
+-- Terminal
+vim.keymap.set('t', 'QQ', '<C-\\><C-n>:q<cr>', { silent = true }) -- Close terminal
+vim.keymap.set('t', '<D-x>', '<C-\\><C-n>', { silent = true }) -- Exit terminal mode
+vim.keymap.set('t', '<D-k>', '<C-l>', { silent = true }) -- Clear terminal
+vim.keymap.set('t', '<D-v>', '<C-\\><C-n>"+Pi') -- Paste terminal mode
+vim.keymap.set('n', '<D-l>', '<C-\\><C-n><C-w>j', { silent = true }) -- Move to terminal
+vim.keymap.set('t', '<D-l>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
+vim.keymap.set('t', '<C-up>', '<C-\\><C-n><C-w>k', { silent = true }) -- Move to editor
+vim.keymap.set('t', '<M-left>', '<esc>b', { silent = true }) -- Jump back a word
+vim.keymap.set('t', '<M-right>', '<esc>f', { silent = true }) -- Jump forward a word
+vim.keymap.set('t', '<D-left>', '<C-a><C-a>', { silent = true }) -- Jump to beginning of line
+vim.keymap.set('t', '<D-right>', '<C-e>', { silent = true }) -- Jump to end of line
+vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
+vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
+vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
+vim.keymap.set('t', '<D-S>', '<C-\\><C-n><C-w>k<cmd>DiffviewOpen<CR>', { silent = true }) -- Open diff view
+vim.keymap.set('t', '<D-E>', '<C-\\><C-n><C-w>k<cmd>Neotree reveal<CR>', { silent = true }) -- Open file tree
+vim.keymap.set('t', '<C-r>', '<cmd>SessionManager load_session<CR>', { silent = true }) -- Load session
 
-  -- Toggle resize terminal
-  local size = 20
-  local expanded_size = 60
-  vim.keymap.set('t', '<C-~>', function()
-    local term = require('toggleterm.terminal').get_or_create_term(1)
-    size = size == expanded_size and 20 or expanded_size
-    term:resize(size)
-  end, { silent = true })
-end
-
--- Allow +- scaling
-vim.g.neovide_scale_factor = 0.9
-
-local change_scale_factor = function(delta)
-  vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + delta
-end
-
-vim.keymap.set('n', '<D-=>', function()
-  change_scale_factor(0.10)
-end)
-
-vim.keymap.set('n', '<D-->', function()
-  change_scale_factor(-0.10)
-end)
+-- Toggle resize terminal
+local size = 20
+local expanded_size = 60
+vim.keymap.set('t', '<C-~>', function()
+  local term = require('toggleterm.terminal').get_or_create_term(1)
+  size = size == expanded_size and 20 or expanded_size
+  term:resize(size)
+end, { silent = true })
 
 -- Spectre
 vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
@@ -220,28 +237,22 @@ vim.keymap.set(
 vim.keymap.set(
   'v',
   '<D-f>',
-  '<esc><cmd>lua require("spectre").open_file_search({select_word=true}) require("spectre.actions").clear_file_highlight()<CR>',
+  '<esc><cmd>lua require("spectre").open_file_search() require("spectre.actions").clear_file_highlight()<CR>',
   { desc = 'Search on current file' }
 )
-
--- Debugging
--- vim.keymap.set('n', '<D-1>', function() require('dap').continue() end, { desc = 'Start/Continue' })
--- vim.keymap.set('n', '<D-\'>', function() require('dap').step_over() end, { desc = 'Step Over' })
--- vim.keymap.set('n', '<D-;>', function() require('dap').step_into() end, { desc = 'Step Into' })
--- vim.keymap.set('n', '<D-\\>', function() require('dap').step_out() end, { desc = 'Step Out' })
--- vim.keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end, { desc = 'Toggle Breakpoint' })
--- vim.keymap.set('n', '<leader>dB', function() require('dap').set_breakpoint() end, { desc = 'Set Breakpoint' })
--- vim.keymap.set('n', '<leader>dl', function() require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: ')) end, { desc = 'Log Point' })
--- vim.keymap.set('n', '<leader>dc', function() require('dap').repl.open() end, { desc = 'Open REPL' })
--- vim.keymap.set('n', '<leader>dr', function() require('dap').run_last() end, { desc = 'Run Last' })
--- vim.keymap.set({'n', 'v'}, '<leader>dh', function() require('dap.ui.widgets').hover() end, { desc = 'Hover' })
--- vim.keymap.set({'n', 'v'}, '<leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'Preview' })
--- vim.keymap.set('n', '<leader>df', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.frames) end, { desc = 'Frames' })
--- vim.keymap.set('n', '<leader>ds', function() local widgets = require('dap.ui.widgets') widgets.centered_float(widgets.scopes) end, { desc = 'Scopes' })
 
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`
 local autocmd_group = vim.api.nvim_create_augroup('AutoCmdGroup', {})
+
+function close_all_and_reopen_last_buffer()
+    -- Save the current cursor position
+    local cursor_pos = vim.fn.getpos(".")
+    -- Close all buffers and reopen the last one
+    vim.cmd("%bd | e#")
+    -- Restore the cursor position
+    vim.fn.setpos(".", cursor_pos)
+end
 
 -- Refresh treesitter highlights after a session is loaded
 local skip_reload = false
@@ -254,10 +265,21 @@ vim.api.nvim_create_autocmd({ 'User' }, {
       return
     end
 
+    close_all_and_reopen_last_buffer()
+
     skip_reload = true
     vim.defer_fn(function()
-      vim.cmd 'SessionManager load_current_dir_session'
+      vim.cmd 'SessionManager load_current_dir_session' -- Reload session
     end, 100)
+  end,
+})
+
+-- Reduce open buffers to 1 before saving a session
+vim.api.nvim_create_autocmd({ 'User' }, {
+  pattern = 'SessionSavePre',
+  group = autocmd_group,
+  callback = function()
+    close_all_and_reopen_last_buffer()
   end,
 })
 
@@ -368,7 +390,7 @@ vim.api.nvim_create_autocmd('CursorHold', {
 })
 
 -- Symbol renaming
-keyset('n', '<leader>rn', '<Plug>(coc-rename)', { silent = true })
+keyset('n', '<leader>cr', '<Plug>(coc-rename)', { silent = true })
 
 -- Formatting selected code
 -- keyset("x", "<leader>f", "<Plug>(coc-format-selected)", {silent = true})
@@ -468,8 +490,8 @@ keyset('n', '<leader>co', ':<C-u>CocList outline<cr>', opts)
 -- Search workspace symbols
 keyset('n', '<leader>cs', ':<C-u>CocList -I symbols<cr>', opts)
 -- Do default action for next item
-keyset('n', ']d', ':<C-u>CocNext<cr>', opts)
+-- keyset('n', ']d', ':<C-u>CocNext<cr>', opts)
 -- Do default action for previous item
-keyset('n', '[d', ':<C-u>CocPrev<cr>', opts)
+-- keyset('n', '[d', ':<C-u>CocPrev<cr>', opts)
 -- Resume latest coc list
 keyset('n', '<leader>cp', ':<C-u>CocListResume<cr>', opts)

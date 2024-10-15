@@ -2,11 +2,38 @@ return {
   'nvim-lualine/lualine.nvim',
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function()
+    local dap = require 'dap'
+
+    local function debug()
+      local status = dap.session()
+      if status then
+        return ''
+      end
+      return ''
+    end
+
+    local function cwd()
+      local cwd = vim.fn.getcwd()
+      local cwd_name = vim.fn.fnamemodify(cwd, ":t")
+      return cwd_name
+    end
+
     require('lualine').setup {
       theme = 'vscode',
+      options = {
+        ignore_focus = {
+          'dapui_watches',
+          'dapui_breakpoints',
+          'dapui_scopes',
+          'dapui_console',
+          'dapui_stacks',
+          'dap-repl',
+        },
+      },
       sections = {
         lualine_a = { 'mode' },
         lualine_b = {
+          cwd,
           {
             'branch',
           },
@@ -37,8 +64,8 @@ return {
         },
         lualine_c = {}, -- { { 'filename', color = { fg = '#666666' } } },
         lualine_x = { { 'b:gitsigns_blame_line', color = { fg = '#666666' } } },
-        lualine_y = { 'filetype' },
-        lualine_z = { 'location' },
+        lualine_y = { 'filetype', 'diff', 'diagnostics' },
+        lualine_z = { 'location', debug },
       },
       inactive_sections = {
         lualine_a = {},

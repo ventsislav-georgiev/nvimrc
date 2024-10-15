@@ -16,12 +16,21 @@ return {
       'nvim-telescope/telescope-ui-select.nvim',
       'jvgrootveld/telescope-zoxide',
       'debugloop/telescope-undo.nvim',
+      'nvim-telescope/telescope-dap.nvim',
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
       local z_utils = require 'telescope._extensions.zoxide.utils'
+      local actions = require 'telescope.actions'
 
       require('telescope').setup {
+        defaults = {
+          mappings = {
+            i = {
+              ['<esc>'] = actions.close,
+            },
+          },
+        },
         pickers = {
           find_files = {
             hidden = true,
@@ -61,6 +70,7 @@ return {
       pcall(require('telescope').load_extension, 'ui-select')
       pcall(require('telescope').load_extension, 'zoxide')
       pcall(require('telescope').load_extension, 'undo')
+      pcall(require('telescope').load_extension, 'dap')
 
       local file_ignore_patterns = {
         '%.git/',
@@ -89,10 +99,7 @@ return {
       end
 
       vim.keymap.set('n', '<leader>ss', files_search, { desc = '[S]earch Files' })
-
-      if vim.g.neovide then
-        vim.keymap.set('n', '<D-p>', files_search, { desc = '[S]earch Files' })
-      end
+      vim.keymap.set('n', '<D-p>', files_search, { desc = '[S]earch Files' })
 
       vim.keymap.set('n', '<leader>sw', function()
         builtin.grep_string {
@@ -125,10 +132,19 @@ return {
       end, { desc = '[/] Fuzzily search in current buffer' })
 
       vim.keymap.set('n', '<leader>z', require('telescope').extensions.zoxide.list, { desc = '[C]hange [D]irectory' })
+
+      -- Undo history
       vim.keymap.set('n', '<leader>u', '<cmd>Telescope undo<cr>')
 
       -- Diff view
       vim.keymap.set('n', '<leader>sv', ':DiffviewOpen<CR>', { desc = '[S]how Diff[V]iew' })
+
+      -- DAP
+      vim.keymap.set('n', '<leader>dc', ':Telescope dap commands<CR>', { desc = '[C]ommands' })
+      vim.keymap.set('n', '<leader>db', ':Telescope dap list_breakpoints<CR>', { desc = '[B]reakpoints' })
+      vim.keymap.set('n', '<leader>df', ':Telescope dap frames<CR>', { desc = '[F]rames' })
+      vim.keymap.set('n', '<leader>dv', ':Telescope dap variables<CR>', { desc = '[V]ariables' })
+      vim.keymap.set('n', '<leader>dg', ':Telescope dap configurations<CR>', { desc = 'Confi[g]urations' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys

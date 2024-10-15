@@ -64,10 +64,10 @@ return {
     local function clear_file_highlight()
       local all_bufs = vim.api.nvim_list_bufs()
       for _, buf_id in ipairs(all_bufs) do
-          if buf_id ~= state.bufnr and vim.api.nvim_buf_is_loaded(buf_id) then
-            vim.api.nvim_buf_clear_namespace(buf_id, config.namespace, 0, -1)
-          end
+        if buf_id ~= state.bufnr and vim.api.nvim_buf_is_loaded(buf_id) then
+          vim.api.nvim_buf_clear_namespace(buf_id, config.namespace, 0, -1)
         end
+      end
     end
     require('spectre.actions').clear_file_highlight = clear_file_highlight
 
@@ -456,6 +456,16 @@ return {
       is_block_ui_break = true,
       live_update = true,
       is_insert_mode = false,
+      replace_engine = {
+        ['sed'] = {
+          cmd = 'sed',
+          args = {
+            '-i',
+            '',
+            '-E',
+          },
+        },
+      },
       highlight = {
         ui = 'String',
         search = 'SpectreSearch',
@@ -481,14 +491,15 @@ return {
       },
     }
 
+    -- local c = require('vscode.colors').get_colors()
     vim.api.nvim_set_hl(0, 'SpectreSearch', {
-      fg = '#000000',
-      bg = '#aa4242',
+      fg = '#FFCC55',
+      bg = '#774836',
     })
-    vim.api.nvim_set_hl(0, 'SpectreReplace', {
-      fg = '#000000',
-      bg = '#00a040',
-    })
+    -- vim.api.nvim_set_hl(0, 'SpectreReplace', {
+    --   fg = '#000000',
+    --   bg = '#00a040',
+    -- })
     vim.api.nvim_set_hl(0, 'SpectreDir', {
       fg = '#a3a3a3',
       bg = '#000000',
