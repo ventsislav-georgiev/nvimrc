@@ -2,6 +2,7 @@ return {
   {
     'mfussenegger/nvim-dap',
     dependencies = {
+      'williamboman/mason.nvim',
       'theHamsta/nvim-dap-virtual-text',
       'rcarriga/nvim-dap-ui',
       'nvim-neotest/nvim-nio',
@@ -9,9 +10,10 @@ return {
       'mfussenegger/nvim-dap-python',
     },
     config = function()
-      local dap = require 'dap'
+      require("mason").setup()
 
       -- Break on uncaught by default
+      local dap = require 'dap'
       local default_exception_breakpoints = { 'uncaught', 'rust_panic' }
       dap.defaults.fallback.exception_breakpoints = default_exception_breakpoints
 

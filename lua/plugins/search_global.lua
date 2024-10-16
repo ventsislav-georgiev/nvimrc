@@ -455,7 +455,7 @@ return {
     require('spectre').setup {
       is_block_ui_break = true,
       live_update = true,
-      is_insert_mode = false,
+      is_insert_mode = true,
       replace_engine = {
         ['sed'] = {
           cmd = 'sed',

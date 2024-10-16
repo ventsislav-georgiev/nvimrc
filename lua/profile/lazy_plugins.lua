@@ -34,4 +34,5 @@ require('lazy').setup {
   require 'plugins.window_cmdline',
   require 'plugins.window_statusline',
   require 'plugins.window_tabs',
+  require 'plugins.window_ui',
 }

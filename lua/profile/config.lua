@@ -193,6 +193,7 @@ vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
 -- Configs
 vim.keymap.set('n', '<D-0>', ':source<CR>')
 vim.keymap.set('n', '<C-0>', ':Lazy<CR>')
+vim.keymap.set('n', '<M-0>', ':Mason<CR>')
 
 -- Navigate Sessions
 vim.keymap.set('n', '<C-r>', ':SessionManager load_session<CR>')
@@ -246,31 +247,34 @@ vim.keymap.set(
 local autocmd_group = vim.api.nvim_create_augroup('AutoCmdGroup', {})
 
 local function close_and_reopen_last_buffer()
-  -- Save the current cursor position
   local cursor_pos = vim.fn.getpos '.'
-  -- Close all buffers and reopen the last one
-  vim.cmd 'bd | e#'
-  -- Restore the cursor position
+
+  vim.cmd 'bd'
+
+  if vim.fn.bufnr '#' == -1 then
+    return
+  end
+
+  vim.cmd 'e#'
+
   vim.fn.setpos('.', cursor_pos)
 end
 
-local function close_all_but_last_n_buffers()
-    local n = 6
+local function close_all_but_last_n_buffers(n)
+  -- Get a list of all listed buffers
+  local buffers = vim.tbl_filter(function(buf)
+    return vim.fn.buflisted(buf) == 1
+  end, vim.api.nvim_list_bufs())
 
-    -- Get a list of all listed buffers
-    local buffers = vim.tbl_filter(function(buf)
-      return vim.fn.buflisted(buf) == 1
-      end, vim.api.nvim_list_bufs())
+  -- If there are n or fewer buffers, no need to close anything
+  if #buffers <= n then
+    return
+  end
 
-    -- If there are n or fewer buffers, no need to close anything
-    if #buffers <= n then
-        return
-      end
-
-    -- Close all but the last two buffers
-    for i = 1, #buffers - n do
-      vim.cmd('bd ' .. buffers[i])
-    end
+  -- Close all but the last two buffers
+  for i = 1, #buffers - n do
+    vim.cmd('bd ' .. buffers[i])
+  end
 end
 
 -- Refresh treesitter highlights after a session is loaded
@@ -291,8 +295,17 @@ vim.api.nvim_create_autocmd({ 'User' }, {
   pattern = 'SessionSavePre',
   group = autocmd_group,
   callback = function()
-    close_all_but_last_n_buffers()
+    close_all_but_last_n_buffers(6)
   end,
+})
+
+-- Close buffers before next session is loaded
+vim.api.nvim_create_autocmd({ 'User' }, {
+    pattern = 'SessionSavePost',
+    group = autocmd_group,
+    callback = function()
+      close_all_but_last_n_buffers(0)
+    end,
 })
 
 -- Auto-save on changes
