@@ -157,9 +157,15 @@ vim.keymap.set('v', '<backspace>', '"_d') -- Delete selection
 vim.keymap.set('v', '<del>', '"_d') -- Delete selection
 vim.keymap.set('n', '<D-P>', '<C-^>') -- Switch between last two buffers
 vim.keymap.set('n', '<D-w>', ':bd<CR>') -- Close buffer
+vim.keymap.set('v', '<Tab>', '>gv') -- Indent
+vim.keymap.set('v', '<S-Tab>', '<gv') -- Unindent
 
 vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
+
+-- Remap up and down arrow keys for command-line autocomplete navigation
+vim.api.nvim_set_keymap('c', '<Down>', '<C-n>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('c', '<Up>', '<C-p>', { noremap = true, silent = true })
 
 -- Option arrow keys to move lines and navigation
 -- = to reindent, . current line number, '< begging of selection, '> end of selection, gv reselect last selection
@@ -301,11 +307,11 @@ vim.api.nvim_create_autocmd({ 'User' }, {
 
 -- Close buffers before next session is loaded
 vim.api.nvim_create_autocmd({ 'User' }, {
-    pattern = 'SessionSavePost',
-    group = autocmd_group,
-    callback = function()
-      close_all_but_last_n_buffers(0)
-    end,
+  pattern = 'SessionSavePost',
+  group = autocmd_group,
+  callback = function()
+    close_all_but_last_n_buffers(0)
+  end,
 })
 
 -- Auto-save on changes

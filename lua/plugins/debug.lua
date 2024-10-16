@@ -10,7 +10,7 @@ return {
       'mfussenegger/nvim-dap-python',
     },
     config = function()
-      require("mason").setup()
+      require('mason').setup()
 
       -- Break on uncaught by default
       local dap = require 'dap'

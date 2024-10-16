@@ -36,6 +36,22 @@ return {
           },
           opts = { skip = true },
         },
+        {
+          filter = {
+            event = 'msg_show',
+            kind = '',
+            find = 'The only match',
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = 'msg_show',
+            kind = '',
+            find = 'Fuzzy',
+          },
+          opts = { skip = true },
+        },
       },
       win_options = {
         border = {

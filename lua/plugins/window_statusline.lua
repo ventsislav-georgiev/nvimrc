@@ -3,6 +3,16 @@ return {
   dependencies = { 'nvim-tree/nvim-web-devicons' },
   config = function()
     local dap = require 'dap'
+    local last_debug_exitcode = 0
+
+    dap.listeners.after.event_exited['print_exit'] = function(session, body)
+      last_debug_exitcode = body.exitCode
+
+      if body.exitCode ~= 0 then
+        local msg = 'Debug session exited with code ' .. body.exitCode
+        vim.api.nvim_echo({ { msg, 'ErrorMsg' } }, false, {})
+      end
+    end
 
     local function debug()
       local status = dap.session()
@@ -12,9 +22,21 @@ return {
       return ''
     end
 
+    local function debug_color()
+      local status = dap.session()
+      local color = { fg = '#000000' }
+      if last_debug_exitcode ~= 0 then
+        color.fg = '#ff0000'
+      end
+      if status then
+        color.fg = '#00ff00'
+      end
+      return color
+    end
+
     local function cwd()
       local cwd = vim.fn.getcwd()
-      local cwd_name = vim.fn.fnamemodify(cwd, ":t")
+      local cwd_name = vim.fn.fnamemodify(cwd, ':t')
       return cwd_name
     end
 
@@ -65,7 +87,7 @@ return {
         lualine_c = {}, -- { { 'filename', color = { fg = '#666666' } } },
         lualine_x = { { 'b:gitsigns_blame_line', color = { fg = '#666666' } } },
         lualine_y = { 'filetype', 'diff', 'diagnostics' },
-        lualine_z = { 'location', debug },
+        lualine_z = { 'location', { debug, color = debug_color } },
       },
       inactive_sections = {
         lualine_a = {},
