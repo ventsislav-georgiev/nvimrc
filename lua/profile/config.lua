@@ -245,41 +245,53 @@ vim.keymap.set(
 --  See `:help lua-guide-autocommands`
 local autocmd_group = vim.api.nvim_create_augroup('AutoCmdGroup', {})
 
-function close_all_and_reopen_last_buffer()
-    -- Save the current cursor position
-    local cursor_pos = vim.fn.getpos(".")
-    -- Close all buffers and reopen the last one
-    vim.cmd("%bd | e#")
-    -- Restore the cursor position
-    vim.fn.setpos(".", cursor_pos)
+local function close_and_reopen_last_buffer()
+  -- Save the current cursor position
+  local cursor_pos = vim.fn.getpos '.'
+  -- Close all buffers and reopen the last one
+  vim.cmd 'bd | e#'
+  -- Restore the cursor position
+  vim.fn.setpos('.', cursor_pos)
+end
+
+local function close_all_but_last_n_buffers()
+    local n = 6
+
+    -- Get a list of all listed buffers
+    local buffers = vim.tbl_filter(function(buf)
+      return vim.fn.buflisted(buf) == 1
+      end, vim.api.nvim_list_bufs())
+
+    -- If there are n or fewer buffers, no need to close anything
+    if #buffers <= n then
+        return
+      end
+
+    -- Close all but the last two buffers
+    for i = 1, #buffers - n do
+      vim.cmd('bd ' .. buffers[i])
+    end
 end
 
 -- Refresh treesitter highlights after a session is loaded
-local skip_reload = false
 vim.api.nvim_create_autocmd({ 'User' }, {
   pattern = 'SessionLoadPost',
   group = autocmd_group,
   callback = function()
-    if skip_reload then
-      skip_reload = false
-      return
-    end
+    require('arrow.persist').load_cache_file()
 
-    close_all_and_reopen_last_buffer()
-
-    skip_reload = true
     vim.defer_fn(function()
-      vim.cmd 'SessionManager load_current_dir_session' -- Reload session
-    end, 100)
+      close_and_reopen_last_buffer()
+    end, 10)
   end,
 })
 
--- Reduce open buffers to 1 before saving a session
+-- Reduce open buffers before saving a session
 vim.api.nvim_create_autocmd({ 'User' }, {
   pattern = 'SessionSavePre',
   group = autocmd_group,
   callback = function()
-    close_all_and_reopen_last_buffer()
+    close_all_but_last_n_buffers()
   end,
 })
 
@@ -315,7 +327,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
   callback = function()
     vim.defer_fn(function()
       vim.cmd 'startinsert'
-    end, 100)
+    end, 0)
   end,
 })
 

@@ -8,8 +8,8 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
-    { '<D-E>', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '\\', ':Neotree dir=<C-r>=getcwd()<CR> reveal_file=%:p<CR>', desc = 'NeoTree reveal', silent = true },
+    { '<D-E>', ':Neotree dir=<C-r>=getcwd()<CR> reveal_file=%:p<CR>', desc = 'NeoTree reveal', silent = true },
   },
   opts = {
     window = {
@@ -22,10 +22,11 @@ return {
     filesystem = {
       follow_current_file = {
         enabled = true,
-        leave_dirs_open = false,
+        leave_dirs_open = true,
       },
       filtered_items = {
         hide_dotfiles = false,
+        hide_gitignored = false,
         hide_hidden = false,
       },
       window = {
@@ -35,18 +36,24 @@ return {
         },
       },
     },
+    buffers = {
+      follow_current_file = {
+        enabled = true,
+        leave_dirs_open = true,
+      },
+    },
     default_component_configs = {
       git_status = {
         symbols = {
           -- Change type
-          added = '✚', -- NOTE: you can set any of these to an empty string to not show them
+          added = '✚',
           deleted = '✖',
           modified = '',
           renamed = '󰁕',
           -- Status type
           untracked = '',
           ignored = '',
-          unstaged = '',
+          unstaged = '', -- NOTE: you can set any of these to an empty string to not show them
           staged = '',
           conflict = '',
         },

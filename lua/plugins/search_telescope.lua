@@ -25,6 +25,21 @@ return {
 
       require('telescope').setup {
         defaults = {
+          file_ignore_patterns = {
+            '^.git/',
+            '^vendor/',
+            '^node_modules/',
+            '^dist/',
+            '^build/',
+            '^target/',
+            '/output/',
+            '^out/',
+            '^__pycache__/',
+            '^.pytest_cache/',
+            '.DS_Store',
+            '%(-|\\.)lock.*',
+            '%.pyc',
+          },
           mappings = {
             i = {
               ['<esc>'] = actions.close,
@@ -72,19 +87,6 @@ return {
       pcall(require('telescope').load_extension, 'undo')
       pcall(require('telescope').load_extension, 'dap')
 
-      local file_ignore_patterns = {
-        '%.git/',
-        '%.gitlab/',
-        'yarn%.lock',
-        'node_modules/',
-        'package%-lock%.json',
-        'dist/',
-        'build/',
-        'vendor/',
-        'out/',
-        '%/output/',
-      }
-
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
@@ -94,24 +96,14 @@ return {
         builtin.find_files {
           find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--glob', '!.git' },
           hidden = true,
-          file_ignore_patterns = file_ignore_patterns,
         }
       end
 
       vim.keymap.set('n', '<leader>ss', files_search, { desc = '[S]earch Files' })
       vim.keymap.set('n', '<D-p>', files_search, { desc = '[S]earch Files' })
 
-      vim.keymap.set('n', '<leader>sw', function()
-        builtin.grep_string {
-          file_ignore_patterns = file_ignore_patterns,
-        }
-      end, { desc = '[S]earch current [W]ord' })
-
-      vim.keymap.set('n', '<leader>sg', function()
-        builtin.live_grep {
-          file_ignore_patterns = file_ignore_patterns,
-        }
-      end, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
 
       -- vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       -- vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
