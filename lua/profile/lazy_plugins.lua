@@ -17,6 +17,8 @@ require('lazy').setup {
 
   require 'plugins.mini',
 
+  require 'plugins.preview_markdown',
+
   require 'plugins.search_global',
   require 'plugins.search_jump',
   require 'plugins.search_telescope',
