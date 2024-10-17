@@ -10,21 +10,31 @@ return {
     -- vim.g.VM_highlight_matches = ''
 
     vim.g.VM_maps = {
+      ["Switch Mode"] = "<Tab>",
       ['Add Cursor Up'] = '<D-S-Up>',
       ['Add Cursor Down'] = '<D-S-Down>',
       ['Skip Region'] = '<D-s>',
+      ["Remove Region"] = "<D-r>",
       ['Find Under'] = '<D-d>',
-      ['Find Subword Under'] = '<D-d>',
       ['Select h'] = '<S-Left>',
       ['Select l'] = '<S-Right>',
-      -- ['Undo'] = '<D-z>',
-      -- ['Redo'] = '<D-Z>',
       ['Mouse Cursor'] = '<D-LeftMouse>',
       ['Mouse Column'] = '<D-RightMouse>',
     }
 
     vim.g.VM_custom_remaps = {
       ['<C-c>'] = '<Esc>',
+    }
+
+    vim.g.VM_custom_motions = {
+      ['<left>'] = 'h',
+      ['<right>'] = 'l',
+      ['<up>'] = 'k',
+      ['<down>'] = 'j',
+      ['<M-right>'] = 'W',
+      ['<M-left>'] = 'B',
+      ['<D-right>'] = '$',
+      ['<D-left>'] = '0',
     }
   end,
 }
