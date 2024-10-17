@@ -16,7 +16,7 @@ return {
     -- - csrb'  - [S]urround [R]eplace [B]rackets [']
     require('mini.surround').setup {
       -- Duration (in ms) of highlight when calling `MiniSurround.highlight()`
-      highlight_duration = 500,
+      highlight_duration = 5000,
       -- Module mappings. Use `''` (empty string) to disable one.
       mappings = {
         add = 'csa', -- Add surrounding in Normal and Visual modes
@@ -31,7 +31,7 @@ return {
         suffix_next = 'n', -- Suffix to search with "next" method
       },
       -- Number of lines within which surrounding is searched
-      n_lines = 100,
+      n_lines = 500,
     }
   end,
 }

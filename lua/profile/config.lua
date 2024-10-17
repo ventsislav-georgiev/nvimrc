@@ -235,6 +235,7 @@ end, { silent = true })
 
 -- Spectre
 vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
+vim.keymap.set('i', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
 vim.keymap.set(
   'n',
   '<D-f>',

@@ -1,9 +1,18 @@
 {
   "inlayHint.enable": false,
   "suggest.noselect": false,
+
+
   "go.enable": true,
-  "Lua.workspace.checkThirdParty": false,
+
+
   "python.linting.flake8Enabled": true,
+
+
+  "Lua.workspace.checkThirdParty": false,
+  "Lua.diagnostics.disable": ["missing-fields"],
+
+
   "languageserver": {
     "terraform": {
       "command": "terraform-ls",
