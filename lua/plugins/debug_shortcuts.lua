@@ -10,7 +10,6 @@ end
 
 local function terminate()
   dap.terminate()
-  dapui.close()
 end
 
 local function dapui_toggle()
@@ -49,6 +48,7 @@ vim.keymap.set('n', '<leader>da', function()
 end, { desc = 'Toggle break on startup' })
 
 vim.keymap.set('n', '<D-1>', dap.continue, { desc = 'Start/Continue' })
+vim.keymap.set('n', '<D-\\>', dap.continue, { desc = 'Start/Continue' })
 vim.keymap.set('n', '<D-b>', dap.toggle_breakpoint, { desc = 'Toggle [B]reakpoint' })
 vim.keymap.set('n', '<D-B>', function()
   dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
@@ -61,8 +61,8 @@ vim.keymap.set('n', '<D-3>', terminate, { desc = 'Stop' })
 vim.keymap.set('n', '<D-4>', dap.restart, { desc = 'Restart' })
 vim.keymap.set('n', '<D-;>', dap.step_into, { desc = 'Step Into' })
 vim.keymap.set('n', "<D-'>", dap.step_over, { desc = 'Step Over' })
-vim.keymap.set('n', '<D-\\>', dap.step_out, { desc = 'Step Out' })
-vim.keymap.set('n', '<D-|>', dap.step_back, { desc = 'Step Back' })
+vim.keymap.set('n', '<D-S-:>', dap.step_out, { desc = 'Step Out' })
+vim.keymap.set('n', '<D-S-">', dap.step_back, { desc = 'Step Back' })
 vim.keymap.set('n', '<D-r>', dap.run_to_cursor, { desc = '[R]un to [C]ursor' })
 vim.keymap.set('n', '<D-e>', eval_enter, { desc = '[E]val under [C]ursor' })
 vim.keymap.set('n', '<S-L>', eval_enter, { desc = '[E]val under [C]ursor' })

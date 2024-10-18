@@ -140,7 +140,7 @@ vim.keymap.set('n', '<leader>gq', ':DiffviewClose<CR>', { desc = '[C]lose Diff V
 
 -- General Operations
 vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
-vim.keymap.set('n', '<D-s>', ':w<CR>') -- Save
+vim.keymap.set('n', '<D-s>', ':update<CR>') -- Save
 vim.keymap.set({ 'n', 'v' }, '<D-z>', 'u') -- Undo
 vim.keymap.set({ 'n', 'v' }, '<D-Z>', '<C-r>') -- Redo
 vim.keymap.set('i', '<D-z>', '<ESC>uu') -- Undo
@@ -149,6 +149,8 @@ vim.keymap.set('n', '<D-c>', 'Vy') -- Copy
 vim.keymap.set('v', '<D-c>', '"+y') -- Copy
 vim.keymap.set('n', '<D-v>', '"+P') -- Paste normal mode
 vim.keymap.set('v', '<D-v>', '"+P') -- Paste visual mode
+vim.keymap.set('n', '<D-x>', 'Vx') -- Cut line normal mode
+vim.keymap.set('v', '<D-x>', 'x') -- Cut visual mode
 vim.keymap.set('c', '<D-v>', '<C-R>+') -- Paste command mode
 vim.keymap.set('i', '<D-v>', '<ESC>l"+Pli') -- Paste insert mode
 vim.keymap.set('n', '<backspace>', '"_X') -- Delete char
@@ -156,9 +158,10 @@ vim.keymap.set('n', '<del>', '"_x') -- Delete char
 vim.keymap.set('v', '<backspace>', '"_d') -- Delete selection
 vim.keymap.set('v', '<del>', '"_d') -- Delete selection
 vim.keymap.set('n', '<D-P>', '<C-^>') -- Switch between last two buffers
-vim.keymap.set('n', '<D-w>', ':bd<CR>') -- Close buffer
+vim.keymap.set('n', '<D-w>', ':bd!<CR>') -- Close buffer
 vim.keymap.set('v', '<Tab>', '>gv') -- Indent
 vim.keymap.set('v', '<S-Tab>', '<gv') -- Unindent
+vim.keymap.set('n', '<D-n>', ':enew<CR>') -- New buffer
 
 vim.api.nvim_set_keymap('', '<D-v>', 'p', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true })
