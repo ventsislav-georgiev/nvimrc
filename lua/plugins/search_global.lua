@@ -1,5 +1,6 @@
 return {
   'nvim-pack/nvim-spectre',
+  lazy = true,
   dependencies = { 'nvim-lua/plenary.nvim' },
   config = function()
     -- ref: https://github.com/TioeAre/nvim/blob/15ca64d647fdb936c4021776b949f0a284126272/lua/plugin_config/user_spectre.lua

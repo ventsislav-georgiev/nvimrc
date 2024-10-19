@@ -22,7 +22,6 @@ end
 vim.keymap.set('n', '<leader>dx', dap.clear_breakpoints, { desc = 'Clear Breakpoints' })
 vim.keymap.set('n', '<leader>dm', debug_test_method, { desc = 'Test [M]ethod' })
 
-vim.keymap.set('n', '<leader>dt', dapui.toggle, { desc = '[T]oggle UI' })
 vim.keymap.set('n', '<leader>duc', dapui.close, { desc = '[C]lose UI' })
 vim.keymap.set('n', '<leader>dus', function() dapui.toggle({ layout = 1 }) end, { desc = '[T]oggle Side UI' })
 vim.keymap.set('n', '<leader>dub', function() dapui.toggle({ layout = 2 }) end, { desc = '[T]oggle Bottom UI' })
@@ -44,9 +43,7 @@ vim.keymap.set('n', '<leader>da', function()
   end
 end, { desc = 'Toggle break on startup' })
 
-vim.keymap.set('n', '<D-1>', dap.continue, { desc = 'Start/Continue' })
 vim.keymap.set('n', '<D-\\>', dap.run_last, { desc = 'Start/Continue' })
-vim.keymap.set('n', '<D-b>', dap.toggle_breakpoint, { desc = 'Toggle [B]reakpoint' })
 
 vim.keymap.set('n', '<D-B>', function()
   dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')

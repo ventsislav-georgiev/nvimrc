@@ -9,4 +9,13 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
-require('profile.plugins')
+require('lazy').is_loaded = function(name)
+  local lazy_config = require 'lazy.core.config'
+  if lazy_config.plugins[name] then
+    if lazy_config.plugins[name]._.loaded then
+      return true
+    end
+  end
+end
+
+require 'profile.plugins'

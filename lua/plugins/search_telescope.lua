@@ -2,7 +2,7 @@ return {
   {
     -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
-    event = 'VimEnter',
+    event = 'VeryLazy',
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -25,6 +25,10 @@ return {
 
       require('telescope').setup {
         defaults = {
+          layout_strategy='vertical',
+          layout_config = {
+            vertical = { width = 0.6 },
+          },
           file_ignore_patterns = {
             '^.git/',
             '^vendor/',
@@ -67,7 +71,7 @@ return {
                 end,
               },
               ['<C-s>'] = {
-                before_action = function(selection)
+                before_action = function(_)
                   print 'before C-s'
                 end,
                 action = function(selection)
@@ -85,7 +89,6 @@ return {
       pcall(require('telescope').load_extension, 'ui-select')
       pcall(require('telescope').load_extension, 'zoxide')
       pcall(require('telescope').load_extension, 'undo')
-      pcall(require('telescope').load_extension, 'dap')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -132,11 +135,26 @@ return {
       vim.keymap.set('n', '<leader>sv', ':DiffviewOpen<CR>', { desc = '[S]how Diff[V]iew' })
 
       -- DAP
-      vim.keymap.set('n', '<leader>dc', ':Telescope dap commands<CR>', { desc = '[C]ommands' })
-      vim.keymap.set('n', '<leader>db', ':Telescope dap list_breakpoints<CR>', { desc = '[B]reakpoints' })
-      vim.keymap.set('n', '<leader>df', ':Telescope dap frames<CR>', { desc = '[F]rames' })
-      vim.keymap.set('n', '<leader>dv', ':Telescope dap variables<CR>', { desc = '[V]ariables' })
-      vim.keymap.set('n', '<leader>dg', ':Telescope dap configurations<CR>', { desc = 'Confi[g]urations' })
+      local function dapcmd(arg)
+        pcall(require('telescope').load_extension, 'dap')
+        vim.cmd('Telescope dap ' .. arg)
+      end
+
+      vim.keymap.set('n', '<leader>dc', function()
+        dapcmd 'commands'
+      end, { desc = '[C]ommands' })
+      vim.keymap.set('n', '<leader>db', function()
+        dapcmd 'list_breakpoints'
+      end, { desc = '[B]reakpoints' })
+      vim.keymap.set('n', '<leader>df', function()
+        dapcmd 'frames'
+      end, { desc = '[F]rames' })
+      vim.keymap.set('n', '<leader>dv', function()
+        dapcmd 'variables'
+      end, { desc = '[V]ariables' })
+      vim.keymap.set('n', '<leader>dg', function()
+        dapcmd 'configurations'
+      end, { desc = 'Confi[g]urations' })
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys

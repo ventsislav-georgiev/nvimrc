@@ -1,5 +1,6 @@
 return {
   'jiaoshijie/undotree',
+  lazy = true,
   dependencies = 'nvim-lua/plenary.nvim',
   config = true,
   keys = {

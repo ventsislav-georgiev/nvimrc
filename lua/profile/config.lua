@@ -158,9 +158,6 @@ vim.opt.langmap = vim.fn.join({
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>cq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-
 -- Windows
 -- See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
@@ -183,11 +180,11 @@ vim.keymap.set('n', 'x', '"_x')
 vim.keymap.set('n', 'X', '"_X')
 
 -- Git Diff View Shortcuts
-vim.keymap.set('n', '<leader>gf', ':DiffviewFileHistory %<CR>', { desc = '[F]ile History' })
-vim.keymap.set('n', '<leader>gb', ':DiffviewFileHistory<CR>', { desc = '[B]ranch History' })
-vim.keymap.set('n', '<leader>gc', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
-vim.keymap.set('n', '<D-S>', ':DiffviewOpen<CR>', { desc = 'Current [D]iff' })
-vim.keymap.set('n', '<leader>gq', ':DiffviewClose<CR>', { desc = '[C]lose Diff View' })
+vim.keymap.set('n', '<leader>gf', [[<cmd>lua require('diffview').file_history(nil, '%')<CR>]], { desc = '[F]ile History' })
+vim.keymap.set('n', '<leader>gb', [[<cmd>lua require('diffview').file_history()<CR>]], { desc = '[B]ranch History' })
+vim.keymap.set('n', '<leader>gc', [[<cmd>lua require('diffview').open()<CR>]], { desc = 'Current [D]iff' })
+vim.keymap.set('n', '<D-S>', [[<cmd>lua require('diffview').open()<CR>]], { desc = 'Current [D]iff' })
+vim.keymap.set('n', '<leader>gq', [[<cmd>lua require('diffview').close()<CR>]], { desc = '[C]lose Diff View' })
 
 -- General Operations
 vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
@@ -253,7 +250,7 @@ vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
 -- Configs
 vim.keymap.set('n', '<D-0>', ':source<CR>')
 vim.keymap.set('n', '<C-0>', ':Lazy<CR>')
-vim.keymap.set('n', '<M-0>', ':Mason<CR>')
+vim.keymap.set('n', '<M-0>', [[<cmd>lua require("mason.ui").open()<CR>]])
 
 -- Navigate Sessions
 vim.keymap.set('n', '<C-r>', ':SessionManager load_session<CR>')
@@ -274,9 +271,14 @@ vim.keymap.set('t', '<D-right>', '<C-e>', { silent = true }) -- Jump to end of l
 vim.keymap.set('t', '<D-backspace>', '<C-u>', { silent = true }) -- Delete line
 vim.keymap.set('t', '<M-backspace>', '<C-w>', { silent = true }) -- Delete word
 vim.keymap.set('t', '<D-z>', '<C-\\><C-_>', { silent = true }) -- Undo last edit
-vim.keymap.set('t', '<D-S>', '<C-\\><C-n><C-w>k<cmd>DiffviewOpen<CR>', { silent = true }) -- Open diff view
+vim.keymap.set('t', '<D-S>', '<C-\\><C-n><C-w>k<cmd><cmd>lua require("diffview").open()<CR>', { silent = true }) -- Open diff view
 vim.keymap.set('t', '<D-E>', '<C-\\><C-n><C-w>k<cmd>Neotree reveal<CR>', { silent = true }) -- Open file tree
 vim.keymap.set('t', '<C-r>', '<cmd>SessionManager load_session<CR>', { silent = true }) -- Load session
+
+-- Debugging
+vim.keymap.set('n', '<D-1>', [[<cmd>lua require('dap').continue()<CR>]], { desc = 'Start/Continue' })
+vim.keymap.set('n', '<D-b>', [[<cmd>lua require('dap').toggle_breakpoint()<CR>]], { desc = 'Toggle [B]reakpoint' })
+vim.keymap.set('n', '<leader>dt', [[<cmd>lua require('dap') require('dapui').toggle()<CR>]], { desc = '[T]oggle UI' })
 
 -- Toggle resize terminal
 local size = 20
@@ -302,6 +304,10 @@ vim.keymap.set(
   '<esc><cmd>lua require("spectre").open_file_search() require("spectre.actions").clear_file_highlight()<CR>',
   { desc = 'Search on current file' }
 )
+
+-- Arrow Jumps
+vim.keymap.set('n', ';', [[<cmd>lua require('arrow.ui').openMenu()<CR>]])
+vim.keymap.set('n', '\'', [[<cmd>lua require('arrow.buffer_ui').openMenu()<CR>]])
 
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -343,7 +349,9 @@ vim.api.nvim_create_autocmd({ 'User' }, {
   pattern = 'SessionLoadPost',
   group = autocmd_group,
   callback = function()
-    require('arrow.persist').load_cache_file()
+    if require('lazy').is_loaded 'arrow' then
+      require('arrow.persist').load_cache_file()
+    end
 
     vim.defer_fn(function()
       close_and_reopen_last_buffer()
@@ -514,6 +522,11 @@ keyset('n', '<leader>cc', '<Plug>(coc-codeaction-cursor)', coc_opts)
 keyset('n', '<leader>ca', '<Plug>(coc-codeaction-source)', coc_opts)
 -- Apply the most preferred quickfix action on the current line.
 keyset('n', '<leader>cf', '<Plug>(coc-fix-current)', coc_opts)
+
+-- treesj join/split block
+vim.keymap.set('n', '<leader>ct', function()
+  require('treesj').toggle()
+end, { desc = 'Join/Split block' })
 
 -- Remap keys for apply refactor code actions.
 -- keyset('n', '<leader>re', '<Plug>(coc-codeaction-refactor)', { silent = true })

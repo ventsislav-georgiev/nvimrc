@@ -1,17 +1,22 @@
 return {
   {
+    'williamboman/mason.nvim',
+    lazy = true,
+    config = function()
+      require('mason').setup {}
+    end,
+  },
+  {
     'mfussenegger/nvim-dap',
+    lazy = true,
     dependencies = {
-      'williamboman/mason.nvim',
       'theHamsta/nvim-dap-virtual-text',
       'rcarriga/nvim-dap-ui',
       'nvim-neotest/nvim-nio',
       'leoluz/nvim-dap-go',
-      'mfussenegger/nvim-dap-python',
+      { 'mfussenegger/nvim-dap-python', lazy = true },
     },
     config = function()
-      require('mason').setup()
-
       -- Break on uncaught by default
       local dap = require 'dap'
       local default_exception_breakpoints = { 'uncaught', 'rust_panic' }
