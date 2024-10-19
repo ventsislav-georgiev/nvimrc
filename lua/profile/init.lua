@@ -1,3 +1,3 @@
 require('profile.config')
-require('profile.lazy_init')
-
+require('profile.lazy')
+require('langmapper').auto()

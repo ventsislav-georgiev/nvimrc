@@ -134,6 +134,26 @@ vim.opt.scrolloff = 10
 -- Set completeopt to have a better completion experience
 -- vim.o.completeopt = 'menuone,noselect'
 
+--- [[ Langmaper ]]
+local function escape(str)
+  local escape_chars = [[;,."|\]]
+  return vim.fn.escape(str, escape_chars)
+end
+
+local en = [[§qwertyuiop[]asdfghjkl;'\`zxcvbnm,./]]
+local bg = [[§явертъуиопшщасдфгхйкл;'ючзьцжбнм,./]]
+local en_shift = [[±QWERTYUIOP{}ASDFGHJKL:"|~ZXCVBNM<>?]]
+local bg_shift = [[±ЯВЕРТЪУИОПШЩАСДФГХЙКЛ:"ЮЧЗѝЦЖБНМ<>?]]
+
+vim.opt.langmap = vim.fn.join({
+  -- | `to` should be first     | `from` should be second
+  escape(bg_shift)
+    .. ';'
+    .. escape(en_shift),
+  escape(bg) .. ';' .. escape(en),
+}, ',')
+
+--- [[ Keymaps ]]
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')

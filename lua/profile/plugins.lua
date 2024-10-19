@@ -1,4 +1,6 @@
 require('lazy').setup {
+  require 'plugins._langmapper',
+
   require 'plugins.cursor',
   require 'plugins.debug',
   require 'plugins.editorconfig',
