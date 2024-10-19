@@ -44,7 +44,7 @@ vim.keymap.set('n', '<leader>da', function()
 end, { desc = 'Toggle break on startup' })
 
 vim.keymap.set('n', '<D-\\>', function()
-  if dap.session() then
+  if dap.session() ~= nil then
     dap.continue()
   else
     dap.run_last()

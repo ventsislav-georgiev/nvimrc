@@ -2,11 +2,13 @@ local dapui = require 'dapui'
 local dapvt = require 'nvim-dap-virtual-text'
 
 -- Signs
-vim.fn.sign_define('DapBreakpoint', { text = '🟥' })
-vim.fn.sign_define('DapBreakpointCondition', { text = '🟧' })
-vim.fn.sign_define('DapLogPoint', { text = '🟩' })
 vim.fn.sign_define('DapStopped', { text = '➤' })
-vim.fn.sign_define('DapBreakpointRejected', { text = '⬜' })
+vim.fn.sign_define('DapBreakpoint', { text = '🔴' })
+vim.fn.sign_define('DapBreakpointRejected', { text = '〇' })
+vim.fn.sign_define('DapBreakpointCondition', { text = '🟡' })
+vim.fn.sign_define('DapLogPoint', { text = '🟢' })
+-- Other cicrle colors: 🟠⚪🔵🟣🟤
+-- Other empty circles: ⭕〇🔘
 
 -- Config
 dapui.setup {

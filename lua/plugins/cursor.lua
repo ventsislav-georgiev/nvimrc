@@ -78,7 +78,7 @@ return {
     set({ 'n', 'v' }, '<D-S-A>', mc.matchAllAddCursors)
 
     -- Delete the main cursor.
-    set({ 'n', 'v' }, '<D-x>', function()
+    set('n', '<D-x>', function()
       if mc.hasCursors() then
         mc.deleteCursor()
       else
