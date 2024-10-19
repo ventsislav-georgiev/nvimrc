@@ -31,22 +31,22 @@ vim.opt.listchars:append {
   nbsp = space,
 }
 
-vim.cmd [[match TrailingWhitespace /\s\+$/]]
+-- vim.cmd [[match TrailingWhitespace /\s\+$/]]
 
-vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
-vim.api.nvim_create_autocmd('InsertEnter', {
-  callback = function()
-    vim.opt.listchars.trail = nil
-    vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Whitespace' })
-  end,
-})
+-- vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
+-- vim.api.nvim_create_autocmd('InsertEnter', {
+--   callback = function()
+--     vim.opt.listchars.trail = nil
+--     vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Whitespace' })
+--   end,
+-- })
 
-vim.api.nvim_create_autocmd('InsertLeave', {
-  callback = function()
-    vim.opt.listchars.trail = space
-    vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
-  end,
-})
+-- vim.api.nvim_create_autocmd('InsertLeave', {
+--   callback = function()
+--     vim.opt.listchars.trail = space
+--     vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
+--   end,
+-- })
 
 -- Neovide
 if vim.g.neovide then
@@ -74,8 +74,8 @@ if vim.g.neovide then
   end)
 end
 
--- [[ Setting options ]]
--- See `:help vim.opt`
+-- Auto write/load file from disk when changed
+vim.opt.autoread = true
 
 -- Make line numbers default
 vim.opt.number = true
@@ -99,7 +99,10 @@ end)
 vim.opt.breakindent = true
 
 -- Disable undo history (causes issues with undo buffer)
-vim.opt.undofile = false
+vim.opt.undofile = true
+
+-- Allow backspacing over everything in insert mode
+vim.opt.backspace = 'indent,eol,start'
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.opt.ignorecase = true
@@ -265,8 +268,8 @@ vim.keymap.set('t', '<C-~>', function()
 end, { silent = true })
 
 -- Spectre
-vim.keymap.set('n', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
-vim.keymap.set('i', '<D-F>', '<cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
+vim.keymap.set('n', '<D-F>', '<esc><cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
+vim.keymap.set('i', '<D-F>', '<esc><cmd>lua require("spectre").toggle() require("spectre.actions").clear_file_highlight()<CR>', { desc = 'Toggle Spectre' })
 vim.keymap.set(
   'n',
   '<D-f>',
@@ -349,7 +352,11 @@ vim.api.nvim_create_autocmd({ 'User' }, {
 -- Auto-save on changes
 vim.api.nvim_create_autocmd({ 'TextChanged', 'TextChangedI' }, {
   group = autocmd_group,
-  command = 'silent! update',
+  callback = function()
+    pcall(function()
+      vim.cmd 'silent! update | undojoin'
+    end)
+  end,
 })
 
 -- Highlight when yanking (copying) text

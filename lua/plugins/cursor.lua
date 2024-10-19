@@ -14,8 +14,7 @@ return {
       elseif mc.hasCursors() then
         mc.clearCursors()
       else
-        local key = vim.api.nvim_replace_termcodes('<esc>', true, false, true)
-        vim.api.nvim_feedkeys(key, 'n', false)
+        vim.cmd 'nohlsearch'
       end
     end)
 

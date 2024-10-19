@@ -8,14 +8,6 @@ local function eval_enter()
   dapui.eval(nil, { enter = true })
 end
 
-local function terminate()
-  dap.terminate()
-end
-
-local function dapui_toggle()
-  dapui.toggle()
-end
-
 local function debug_test_method()
   local filetype = vim.bo.filetype
   if filetype == 'python'  then
@@ -28,8 +20,13 @@ local function debug_test_method()
 end
 
 vim.keymap.set('n', '<leader>dx', dap.clear_breakpoints, { desc = 'Clear Breakpoints' })
-vim.keymap.set('n', '<leader>dt', dapui_toggle, { desc = 'Toggle DAP UI' })
 vim.keymap.set('n', '<leader>dm', debug_test_method, { desc = 'Test [M]ethod' })
+
+vim.keymap.set('n', '<leader>dt', dapui.toggle, { desc = '[T]oggle UI' })
+vim.keymap.set('n', '<leader>duc', dapui.close, { desc = '[C]lose UI' })
+vim.keymap.set('n', '<leader>dus', function() dapui.toggle({ layout = 1 }) end, { desc = '[T]oggle Side UI' })
+vim.keymap.set('n', '<leader>dub', function() dapui.toggle({ layout = 2 }) end, { desc = '[T]oggle Bottom UI' })
+vim.keymap.set('n', '<leader>dur', function() dapui.open({ reset = true }) end, { desc = '[R]eset UI' })
 
 vim.keymap.set('n', '<leader>ds', function()
   dapui_widgets.centered_float(dapui_widgets.scopes)
@@ -48,8 +45,9 @@ vim.keymap.set('n', '<leader>da', function()
 end, { desc = 'Toggle break on startup' })
 
 vim.keymap.set('n', '<D-1>', dap.continue, { desc = 'Start/Continue' })
-vim.keymap.set('n', '<D-\\>', dap.continue, { desc = 'Start/Continue' })
+vim.keymap.set('n', '<D-\\>', dap.run_last, { desc = 'Start/Continue' })
 vim.keymap.set('n', '<D-b>', dap.toggle_breakpoint, { desc = 'Toggle [B]reakpoint' })
+
 vim.keymap.set('n', '<D-B>', function()
   dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
 end, { desc = 'Breakpoint [C]ondition' })
@@ -57,7 +55,7 @@ vim.keymap.set('n', '<D-L>', function()
   dap.set_breakpoint(nil, nil, vim.fn.input 'Log point message: ')
 end, { desc = 'Log [L]ogpoint' })
 
-vim.keymap.set('n', '<D-3>', terminate, { desc = 'Stop' })
+vim.keymap.set('n', '<D-3>', dap.terminate, { desc = 'Stop' })
 vim.keymap.set('n', '<D-4>', dap.restart, { desc = 'Restart' })
 vim.keymap.set('n', '<D-;>', dap.step_into, { desc = 'Step Into' })
 vim.keymap.set('n', "<D-'>", dap.step_over, { desc = 'Step Over' })
