@@ -43,7 +43,13 @@ vim.keymap.set('n', '<leader>da', function()
   end
 end, { desc = 'Toggle break on startup' })
 
-vim.keymap.set('n', '<D-\\>', dap.run_last, { desc = 'Start/Continue' })
+vim.keymap.set('n', '<D-\\>', function()
+  if dap.session() then
+    dap.continue()
+  else
+    dap.run_last()
+  end
+end, { desc = 'Continue/Run Last' })
 
 vim.keymap.set('n', '<D-B>', function()
   dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
