@@ -14,6 +14,40 @@ vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
 
+-- Whitespace
+vim.o.tabstop = 4 -- Tab character looks like 4 spaces
+vim.o.expandtab = false -- Pressing the Tab key will insert spaces instead of a TAB character
+vim.o.softtabstop = 4 -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 4 -- Number of spaces inserted when indenting
+
+vim.opt.list = true
+
+local space = '·'
+vim.opt.listchars:append {
+  tab = '» ',
+  multispace = space,
+  lead = space,
+  trail = space,
+  nbsp = space,
+}
+
+vim.cmd [[match TrailingWhitespace /\s\+$/]]
+
+vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
+vim.api.nvim_create_autocmd('InsertEnter', {
+  callback = function()
+    vim.opt.listchars.trail = nil
+    vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Whitespace' })
+  end,
+})
+
+vim.api.nvim_create_autocmd('InsertLeave', {
+  callback = function()
+    vim.opt.listchars.trail = space
+    vim.api.nvim_set_hl(0, 'TrailingWhitespace', { link = 'Error' })
+  end,
+})
+
 -- Neovide
 if vim.g.neovide then
   -- vim.g.neovide_transparency = 0.9
@@ -85,12 +119,6 @@ vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- Sets how neovim will display certain whitespace characters in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
@@ -143,7 +171,7 @@ vim.keymap.set('n', '<D-a>', 'ggVG') -- Select all
 vim.keymap.set('n', '<D-s>', ':update<CR>') -- Save
 vim.keymap.set({ 'n', 'v' }, '<D-z>', 'u') -- Undo
 vim.keymap.set({ 'n', 'v' }, '<D-Z>', '<C-r>') -- Redo
-vim.keymap.set('i', '<D-z>', '<ESC>uu') -- Undo
+vim.keymap.set('i', '<D-z>', '<ESC>u') -- Undo
 vim.keymap.set('i', '<D-Z>', '<ESC><C-r>') -- Redo
 vim.keymap.set('n', '<D-c>', 'Vy') -- Copy
 vim.keymap.set('v', '<D-c>', '"+y') -- Copy
