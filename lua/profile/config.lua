@@ -243,6 +243,10 @@ vim.keymap.set('n', '<C-=>', '<C-I>')
 vim.keymap.set({ 'n', 'v' }, '<S-up>', '10k')
 vim.keymap.set({ 'n', 'v' }, '<S-down>', '10j')
 
+-- Navigate between open buffers
+vim.keymap.set({ 'n', 'v' }, '<C-S-right>', [[<cmd>lua vim.cmd 'bnext'<CR>]])
+vim.keymap.set({ 'n', 'v' }, '<C-S-left>', [[<cmd>lua vim.cmd 'bprevious'<CR>]])
+
 -- Commenting
 vim.keymap.set('n', '<D-/>', ':norm gcc<CR>')
 vim.keymap.set('v', '<D-/>', ':Commentary<CR>')
@@ -257,6 +261,7 @@ vim.keymap.set('n', '<C-r>', ':SessionManager load_session<CR>')
 vim.keymap.set('n', '<D-R>', ':SessionManager load_current_dir_session<CR>')
 
 -- Terminal
+vim.keymap.set({ 'n', 'v' }, '<D-§>', [[<cmd>lua require('toggleterm').toggle_command()<CR>]], { silent = true }) -- Toggle terminal
 vim.keymap.set('t', 'QQ', '<C-\\><C-n>:q<cr>', { silent = true }) -- Close terminal
 vim.keymap.set('t', '<D-x>', '<C-\\><C-n>', { silent = true }) -- Exit terminal mode
 vim.keymap.set('t', '<D-k>', '<C-l>', { silent = true }) -- Clear terminal
@@ -307,7 +312,7 @@ vim.keymap.set(
 
 -- Arrow Jumps
 vim.keymap.set('n', ';', [[<cmd>lua require('arrow.ui').openMenu()<CR>]])
-vim.keymap.set('n', '\'', [[<cmd>lua require('arrow.buffer_ui').openMenu()<CR>]])
+vim.keymap.set('n', "'", [[<cmd>lua require('arrow.buffer_ui').openMenu()<CR>]])
 
 --- [[ Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -345,17 +350,23 @@ local function close_all_but_last_n_buffers(n)
 end
 
 -- Refresh treesitter highlights after a session is loaded
+local is_start = true
 vim.api.nvim_create_autocmd({ 'User' }, {
   pattern = 'SessionLoadPost',
   group = autocmd_group,
   callback = function()
-    if require('lazy').is_loaded 'arrow' then
+    if is_start then
+      is_start = false
+      return
+    end
+
+    if require('lazy').is_loaded 'arrow.nvim' then
       require('arrow.persist').load_cache_file()
     end
 
     vim.defer_fn(function()
       close_and_reopen_last_buffer()
-    end, 10)
+    end, 100)
   end,
 })
 
@@ -432,9 +443,15 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 
 -- Setup lua nvim
-vim.cmd [[
-  autocmd FileType lua call coc#config('Lua.workspace.library', nvim_get_runtime_file('', 1))
-]]
+vim.api.nvim_create_autocmd('FileType', {
+  group = autocmd_group,
+  pattern = 'lua',
+  callback = function()
+    if require('lazy').is_loaded 'coc.nvim' then
+      vim.api.nvim_command 'silent call coc#config("Lua.workspace.library", nvim_get_runtime_file("", 1))'
+    end
+  end,
+})
 
 -- Always show the signcolumn, otherwise it would shift the text each time
 -- diagnostics appeared/became resolved
@@ -483,8 +500,12 @@ keyset('n', 'K', '<CMD>lua _G.show_docs()<CR>', { silent = true })
 vim.api.nvim_create_augroup('CocGroup', {})
 vim.api.nvim_create_autocmd('CursorHold', {
   group = 'CocGroup',
-  command = "silent call CocActionAsync('highlight')",
   desc = 'Highlight symbol under cursor on CursorHold',
+  callback = function()
+    if require('lazy').is_loaded 'coc.nvim' then
+      vim.api.nvim_command 'silent call CocActionAsync("highlight")'
+    end
+  end,
 })
 
 -- Symbol renaming
@@ -498,16 +519,24 @@ keyset('n', '<leader>cr', '<Plug>(coc-rename)', { silent = true })
 vim.api.nvim_create_autocmd('FileType', {
   group = 'CocGroup',
   pattern = 'typescript,json',
-  command = "setl formatexpr=CocAction('formatSelected')",
   desc = 'Setup formatexpr specified filetype(s).',
+  callback = function()
+    if require('lazy').is_loaded 'coc.nvim' then
+      vim.opt_local.formatexpr = 'CocAction("formatSelected")'
+    end
+  end,
 })
 
 -- Update signature help on jump placeholder
 vim.api.nvim_create_autocmd('User', {
   group = 'CocGroup',
   pattern = 'CocJumpPlaceholder',
-  command = "call CocActionAsync('showSignatureHelp')",
   desc = 'Update signature help on jump placeholder',
+  callback = function()
+    if require('lazy').is_loaded 'coc.nvim' then
+      vim.api.nvim_command 'silent call CocActionAsync("showSignatureHelp")'
+    end
+  end,
 })
 
 -- Apply codeAction to the selected region
@@ -570,11 +599,6 @@ vim.api.nvim_create_user_command('Fold', "call CocAction('fold', <f-args>)", { n
 
 -- Add `:OR` command for organize imports of the current buffer
 vim.api.nvim_create_user_command('OR', "call CocActionAsync('runCommand', 'editor.action.organizeImport')", {})
-
--- Add (Neo)Vim's native statusline support
--- NOTE: Please see `:h coc-status` for integrations with external plugins that
--- provide custom statusline: lightline.vim, vim-airline
-vim.opt.statusline:prepend "%{coc#status()}%{get(b:,'coc_current_function','')}"
 
 -- Mappings for CoCList
 -- code actions and coc stuff

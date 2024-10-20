@@ -1,7 +1,11 @@
 return {
-  'github/copilot.vim',
+  {
+    'github/copilot.vim',
+    event = { 'VeryLazy', 'BufRead' },
+  },
   {
     'neoclide/coc.nvim',
+    event = { 'VeryLazy', 'BufRead' },
     branch = 'release',
     dependencies = { 'github/copilot.vim' },
   },

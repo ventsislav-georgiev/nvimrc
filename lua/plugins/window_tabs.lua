@@ -1,5 +1,6 @@
 return {
   'akinsho/bufferline.nvim',
+  event = 'VeryLazy',
   version = '*',
   dependencies = 'nvim-tree/nvim-web-devicons',
   opts = {
@@ -32,6 +33,7 @@ return {
       hover = { enable = false },
       enforce_regular_tabs = true,
       auto_toggle_bufferline = true,
+      always_show_bufferline = false,
     },
     highlights = {
       fill = {

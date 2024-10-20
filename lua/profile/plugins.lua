@@ -26,7 +26,6 @@ require('lazy').setup {
   require 'plugins.search_leap',
   require 'plugins.search_telescope',
   require 'plugins.search_syntax',
-  require 'plugins.search_zoxide',
 
   require 'plugins.terminal',
   require 'plugins.sessions',

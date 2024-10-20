@@ -1,6 +1,5 @@
 return {
   {
-    -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
     event = 'VeryLazy',
     branch = '0.1.x',
@@ -25,7 +24,7 @@ return {
 
       require('telescope').setup {
         defaults = {
-          layout_strategy='vertical',
+          layout_strategy = 'vertical',
           layout_config = {
             vertical = { width = 0.6 },
           },
@@ -67,18 +66,35 @@ return {
             mappings = {
               default = {
                 after_action = function(selection)
-                  print('Update to (' .. selection.z_score .. ') ' .. selection.path)
+                  local session = require('session_manager.config').dir_to_session_filename(selection.path)
+                  if session:exists() then
+                    require('session_manager.utils').load_session(session.filename, true)
+                    return
+                  end
+
+                  local out =
+                    vim.fn.system "fd --type f --hidden --no-ignore --max-depth 1 . | rg '(README|Dockerfile|index.html|main.go|package.json|.gitignore|Makefile|LICENSE)'"
+                  local results = vim.fn.split(out, '\n')
+
+                  if #results == 0 then
+                    out = vim.fn.system 'fd --type f --hidden --no-ignore --max-depth 2 .'
+                    results = vim.fn.split(out, '\n')
+                  end
+
+                  if #results == 0 then
+                    print('No files found in ' .. selection.path)
+                    vim.cmd 'Explore'
+                    return
+                  end
+
+                  vim.cmd 'bufdo bd' -- Close all buffers
+                  local file = selection.path .. '/' .. results[1]
+                  vim.cmd('e ' .. file) -- Open file
+
+                  require('session_manager').save_current_session()
+                  require('session_manager').load_current_dir_session()
                 end,
               },
-              ['<C-s>'] = {
-                before_action = function(_)
-                  print 'before C-s'
-                end,
-                action = function(selection)
-                  vim.cmd.edit(selection.path)
-                end,
-              },
-              ['<C-q>'] = { action = z_utils.create_basic_command 'split' },
             },
           },
         },
